@@ -5,7 +5,7 @@ const OptionButton = ({ OptionName }) => {
     return (
         <button
             style={{
-                backgroundImage: 'url(/orange-chicken.png)',
+                backgroundImage: `url(${OptionName})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 width: '150px', // set desired width

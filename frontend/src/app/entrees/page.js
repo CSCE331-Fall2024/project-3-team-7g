@@ -7,7 +7,7 @@ export default function Entrees() {
       <Navbar />
       <main className="flex-grow flex flex-col p-4 text-center">
         <h1 className="text-3xl font-bold">Entrees</h1>
-        <OptionButton>Orange Chicken</OptionButton>
+        <OptionButton OptionName={"orange-chicken.png"}>Orange Chicken</OptionButton>
       </main>
     </div>
     );
