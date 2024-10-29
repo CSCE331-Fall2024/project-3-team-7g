@@ -14,7 +14,7 @@ const OptionButton = ({ OptionName }) => {
                 border: 'none',
             }}
         >
-            {OptionName}
+            
         </button>
     );
 }
