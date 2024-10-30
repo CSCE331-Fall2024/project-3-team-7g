@@ -2,6 +2,7 @@ import ButtonList from "../components/ButtonList";
 import Navbar from "../components/Navbar";
 import OptionButton from "../components/OptionButton";
 
+// Creates page and adds navbar. Adds the title and button list of entrees.
 export default function Drinks() {
 
     return (
