@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Navbar from './components/Navbar';
 
+//Creates a home page for when you sign into Panda Express.
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-white text-gray-900">
