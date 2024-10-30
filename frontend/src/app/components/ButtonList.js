@@ -11,7 +11,7 @@ import OptionButton from './OptionButton';
         ],
         entrees: [
             { OptionName: 'Honey Walnut Shrimp', image: 'honey-walnut-shrimp.png' },
-            { OptionName: 'Beijing Beef', image: 'beiking-beef.png' },
+            { OptionName: 'Beijing Beef', image: 'beijing-beef.png' },
             { OptionName: 'Broccoli Beef', image: 'broccoli-beef.png' },
             { OptionName: 'Black Pepper Chicken', image: 'black-pepper.png' },
             { OptionName: 'Beyond Original Orange Chicken', image: 'beyond-original-orange-chicken.png' },
