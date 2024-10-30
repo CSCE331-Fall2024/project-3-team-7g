@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import React from 'react';
 
+// Creates the option button to be used in other .js files.
 const OptionButton = ({ OptionName, image }) => {
     return (
         <button

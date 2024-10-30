@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+// Component that creates the navbar used in other .js files.
 const Navbar = () => {
   return (
     <nav className="bg-[var(--navbar-bg)] text-[var(--navbar-text)] h-16 flex items-center justify-center">
