@@ -6,17 +6,20 @@ const OptionButton = ({ OptionName, image }) => {
         <button
             style={{
                 backgroundImage: `url(${image})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                width: '500px',
-                height: '150px',
+                backgroundSize: 'contain', // Ensures the full image is visible
+                backgroundRepeat: 'no-repeat', // Prevents repeating if the image is smaller
+                backgroundPosition: 'center', // Centers the image within the button
+                width: '100%',
+                height: '200px', // Fixed height for consistent appearance
                 color: '#fff',
                 border: 'none',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '1.5rem',
-                textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)', // Subtle shadow effect
+                fontSize: '1rem',
+                textShadow: '1px 1px 2px rgba(0, 0, 0, 0.8)',
+                padding: '8px',
+                borderRadius: '8px',
                     }}
                 >
                     {OptionName}

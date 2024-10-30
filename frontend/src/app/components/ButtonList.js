@@ -24,6 +24,16 @@ import OptionButton from './OptionButton';
             { OptionName: 'Sweet Fire Chicken', image: 'sweet-fire-chicken.png' },
             { OptionName: 'Hot Ones Chicken', image: 'hot-ones-chicken.png' }
         ],
+        appetizers: [
+            { OptionName: 'Chicken Egg Roll', image: 'chicken-egg-roll.png' },
+            { OptionName: 'Veggie Spring Roll', image: 'veggie-spring-roll.png' },
+            { OptionName: 'Cream Cheese Rangoon', image: 'cream-cheese-rangoon.png' },
+            { OptionName: 'Apple Pie Roll', image: 'apple-pie-roll.png' }
+        ],
+        drinks: [
+            { OptionName: 'Fountain Drink', image: 'fountain-drink.png' },
+            { OptionName: 'Water Bottle', image: 'water-bottle.png' }
+        ]
     };
 
     const ButtonList = ({ listType }) => {
@@ -32,10 +42,10 @@ import OptionButton from './OptionButton';
         return (
             <div
                 style={{
-                    display: 'flex',
-                    flexWrap: 'wrap', // Allows wrapping if buttons exceed container width
-                    gap: '16px', // Space between buttons
-                    justifyContent: 'center', // Centers the buttons horizontally
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', // Larger minimum size
+                    gap: '16px',
+                    padding: '16px',
                 }}
             >
 
