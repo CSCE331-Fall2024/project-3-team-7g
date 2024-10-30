@@ -1,4 +1,6 @@
 import Navbar from "../components/Navbar";
+import OptionButton from "../components/OptionButton";
+import ButtonList from "../components/ButtonList";
 
 export default function Sides() {
     return (
@@ -6,6 +8,7 @@ export default function Sides() {
       <Navbar />
       <main className="flex-grow flex flex-col p-4 text-center">
         <h1 className="text-3xl font-bold">Sides</h1>
+        <ButtonList listType="sides"></ButtonList>
       </main>
     </div>
     );

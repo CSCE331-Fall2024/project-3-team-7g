@@ -1,22 +1,27 @@
 import Image from 'next/image'
 import React from 'react';
 
-const OptionButton = ({ OptionName }) => {
+const OptionButton = ({ OptionName, image }) => {
     return (
         <button
             style={{
-                backgroundImage: `url(${OptionName})`,
+                backgroundImage: `url(${image})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
-                width: '150px', // set desired width
-                height: '50px', // set desired height
+                width: '500px',
+                height: '150px',
                 color: '#fff',
                 border: 'none',
-            }}
-        >
-            {OptionName}
-        </button>
-    );
-}
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '1.5rem',
+                textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)', // Subtle shadow effect
+                    }}
+                >
+                    {OptionName}
+                </button>
+            );
+        }
 
 export default OptionButton;

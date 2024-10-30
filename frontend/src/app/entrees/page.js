@@ -1,3 +1,4 @@
+import ButtonList from "../components/ButtonList";
 import Navbar from "../components/Navbar";
 import OptionButton from "../components/OptionButton";
 
@@ -7,7 +8,7 @@ export default function Entrees() {
       <Navbar />
       <main className="flex-grow flex flex-col p-4 text-center">
         <h1 className="text-3xl font-bold">Entrees</h1>
-        <OptionButton OptionName={"orange-chicken.png"}>Orange Chicken</OptionButton>
+        <ButtonList listType="entrees"></ButtonList>
       </main>
     </div>
     );
