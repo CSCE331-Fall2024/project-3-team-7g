@@ -25,3 +25,40 @@ body {
   color: var(--navbar-text);
 }
 
+button {
+  background-color: var(--navbar-bg);
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background-color: var(--foreground);
+  transform: translate3d(0, -2px, 0) scale(1.03);
+  transition: all 0.3s ease;
+}
+
+.homeScreenButton {
+  background-color: var(--foreground);
+  transition: all 0.3s ease;
+  color: white;
+}
+
+.homeScreenButton:hover {
+  background-color: var(--background);
+  color: black;
+  transform: translate3d(0, -2px, 0) scale(1.03);
+  transition: all 0.3s ease;
+}
+
+.navbarLinks {
+  padding: 0.5em 1em;
+  /* background-color: white; */
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.navbarLinks:hover {
+  background-color: var(--background);
+  color: black;
+  transform: translate3d(0, -2px, 0) scale(1.03);
+  transition: all 0.3s ease;
+}

@@ -1,4 +1,3 @@
-import React from 'react';
 import OptionButton from './OptionButton';
 
 // Main component that creates multiple buttons using the map function
@@ -37,13 +36,13 @@ import OptionButton from './OptionButton';
     };
 
     const ButtonList = ({ listType }) => {
-        const buttons = buttonSets[listType] || []; // Get the appropriate button set
+        const buttons = buttonSets[listType] || [];
     
         return (
             <div
                 style={{
                     display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', // Larger minimum size
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
                     gap: '16px',
                     padding: '16px',
                 }}
