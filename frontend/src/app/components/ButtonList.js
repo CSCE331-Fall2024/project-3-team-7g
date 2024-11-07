@@ -34,3 +34,29 @@ import OptionButton from './OptionButton';
             { OptionName: 'Water Bottle', image: 'water-bottle.png' }
         ]
     };
+
+    const ButtonList = ({ listType }) => {
+        const buttons = buttonSets[listType] || [];
+    
+        return (
+            <div
+                style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                    gap: '16px',
+                    padding: '16px',
+                }}
+            >
+
+                {buttons.map((button, index) => (
+                    <OptionButton 
+                        key={index} 
+                        OptionName={button.OptionName} 
+                        image={button.image} 
+                    />
+                ))}
+            </div>
+        );
+    }
+    
+    export default ButtonList;
