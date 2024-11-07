@@ -1,11 +1,14 @@
 import React from 'react';
 import OptionButton from './OptionButton';
+const dotenv = require('dotenv').config();
+
 
 // Main component that creates multiple buttons using the map function
     const types = ["Side", "Entree", "Appetizer", "Drink"];
     let sets = []
     for (let i = 0; i < types.length; i++) {
-        await fetch('http://localhost:3000/getItemsByType/' + types[i], {
+        // console.log(process.env.BACKEND_PORT + "<<<< THIS IS THE BACKEND PORT");
+        await fetch(process.env.BACKEND_PORT + '/getItemsByType/' + types[i], {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
