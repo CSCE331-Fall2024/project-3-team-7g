@@ -3,6 +3,7 @@ const { Pool } = require('pg');
 const dotenv = require('dotenv').config();
 const cors = require('cors')
 const login = require('./routes/login')
+const getItemsByType = require('./routes/getItemsByType')
 
 const app = express();
 app.use(cors())
@@ -18,6 +19,7 @@ const pool = new Pool({
 });
 
 app.use('/login', login)
+app.use('/getItemsByType', getItemsByType)
 
 // Add process hook to shutdown pool
 process.on('SIGINT', function() {
