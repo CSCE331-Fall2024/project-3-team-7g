@@ -14,16 +14,16 @@ const pool = new Pool({
     ssl: {rejectUnauthorized: false}
 });
 
-router.get('/', (req, res) => {
+router.get('/:type', (req, res) => {
     let items = [];
-    let type = req.body.Type;
+    const type = req.params.type;
     pool
         .query('SELECT * FROM menu where type=\'' + type + '\';')
         .then(query_res => {
             for (let i = 0; i < query_res.rowCount; i++){
-                let str = query_res.rows[i].name;
-                let imageStr = str.toLowerCase().replace(/\s+/g, "_") + ".png";
-                items.push( {str, imageStr});
+                let OptionName = query_res.rows[i].name;
+                let image = OptionName.toLowerCase().replace(/\s+/g, "-") + ".png";
+                items.push( {OptionName, image});
             }
             res.send(items);
         });
