@@ -4,7 +4,7 @@ const dotenv = require('dotenv').config();
 
 
 // Main component that creates multiple buttons using the map function
-    const types = ["Side", "Entree", "Appetizer", "Drink"];
+    const types = ["Side", "Entree", "Appetizer", "Drink", "Size"];
     let sets = []
     for (let i = 0; i < types.length; i++) {
         // console.log(process.env.BACKEND_PORT + "<<<< THIS IS THE BACKEND PORT");
@@ -26,7 +26,8 @@ const dotenv = require('dotenv').config();
         sides:  sets[0],
         entrees: sets[1],
         appetizers: sets[2],
-        drinks: sets[3]
+        drinks: sets[3],
+        sizes: sets[4]
     };
 
     const ButtonList = ({ listType }) => {

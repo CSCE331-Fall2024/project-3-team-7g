@@ -17,16 +17,6 @@ const pool = new Pool({
 router.get('/:type', (req, res) => {
     let items = [];
     const type = req.params.type;
-    if (type == 'Size') {
-        const sizes = ['Bowl', 'Plate', 'Bigger Plate', 'A La Carte'];
-        for (var i = 0; i < sizes.length; i++) {
-            const OptionName = sizes[i];
-            const image = sizes[i].toLowerCase().replace(/\s+/g, "-") + ".png";
-            items.push( {OptionName, image} );
-        }
-
-    }
-
     pool
         .query('SELECT * FROM menu where type=\'' + type + '\';')
         .then(query_res => {
