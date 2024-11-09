@@ -2,7 +2,6 @@ import React from 'react';
 import OptionButton from './OptionButton';
 const dotenv = require('dotenv').config();
 
-
 // Main component that creates multiple buttons using the map function
     const types = ["Side", "Entree", "Appetizer", "Drink", "Size"];
     let sets = []
