@@ -32,13 +32,13 @@ const OptionButton = ({ OptionName, image }) => {
     <Image
         src={imgSrc}
         alt={`${OptionName} Image`}
-        width={isFallback ? 100 : 180} // Make the fallback image smaller (100px wide)
-        height={isFallback ? 100 : 180} // Make the fallback image smaller (100px high)
+        width={isFallback ? 100 : 180}
+        height={isFallback ? 100 : 180}
         style={{
-          objectFit: 'contain', // Ensure the image fits nicely
-          marginBottom: '2em',  // Space between the image and text
+            objectFit: 'contain',
+            marginBottom: '2em', 
         }}
-        onError={handleImageError} // Fallback when image fails to load
+        onError={handleImageError}
     />
     {OptionName}
     </button>
