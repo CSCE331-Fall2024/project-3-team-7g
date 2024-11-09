@@ -4,6 +4,10 @@ const dotenv = require('dotenv').config();
 const cors = require('cors')
 const login = require('./routes/login')
 const getItemsByType = require('./routes/getItemsByType')
+const addQuantity = require('./routes/Manager')
+const addMenuItem = require('./routes/Manager')
+const addInventoryItem = require('./routes/Manager')
+const getWeeklySales = require('./routes/Manager')
 
 const app = express();
 app.use(cors())
@@ -20,6 +24,10 @@ const pool = new Pool({
 
 app.use('/login', login)
 app.use('/getItemsByType', getItemsByType)
+app.use('/Manager', addQuantity)
+app.use('/Manager', addMenuItem)
+app.use('/Manager', addInventoryItem)
+app.use('/Manager', getWeeklySales)
 
 // Add process hook to shutdown pool
 process.on('SIGINT', function() {
