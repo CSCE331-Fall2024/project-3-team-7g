@@ -46,7 +46,8 @@ const dotenv = require('dotenv').config();
                     <OptionButton 
                         key={index} 
                         OptionName={button.OptionName} 
-                        image={button.image} 
+                        image={button.image}
+                        isAccessible={isAccessible} 
                     />
                 ))}
             </div>
