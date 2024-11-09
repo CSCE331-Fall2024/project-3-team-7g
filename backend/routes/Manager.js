@@ -114,38 +114,30 @@ router.get('/getWeeklySales/:year/:month/:day', async (req, res) => {
 router.get('/getHourlySales/:year/:month/:day', async (req, res) => {
     const { year, month, day } = req.params;
 
-    try {
-        const firstDay = new Date(year, month - 1, day, 9, 0, 0);
-
-        const lastDay = new Date(firstDay);
-        lastDay.setDate(firstDay.getDate() + 6);
-        lastDay.setHours(21, 0, 0);
-
-        const firstDayStr = firstDay.toISOString();
-        const lastDayStr = lastDay.toISOString();
-
-        console.log(`Date range: ${firstDayStr} to ${lastDayStr}`);
-
-        const query = `
-            SELECT SUM(totalcost) AS total_sales_hour, SUM(CASE WHEN paymentmethod = 'Card' THEN totalcost ELSE 0 END) 
+    let hourlySales = []; 
+    try { 
+        for (let hour = 9; hour < 21; hour++) { 
+            const startTime = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')} ${String(hour).padStart(2, '0')}:00:00`; 
+            const endTime = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')} ${String(hour + 1).padStart(2, '0')}:00:00`; 
+            
+            const query = ` SELECT SUM(totalcost) AS total_sales_hour, 
+            SUM(CASE WHEN paymentmethod = 'Card' THEN totalcost ELSE 0 END) 
             AS total_card, SUM(CASE WHEN paymentmethod = 'Cash' THEN totalcost ELSE 0 END) 
-            AS total_cash FROM customer_purchase_log WHERE timeofpurchase >= 
-            $1::DATE AND timeofpurchase < $2::DATE
-        `;
-        const result = await pool.query(query, [firstDayStr, lastDayStr]);
-
-        const purchases = result.rows.map(row => ({
-            customerId: row.customerid,
-            orderId: row.orderid,
-            time: row.timeofpurchase,
-            totalCost: row.totalcost
-        }));
-
-        res.json(purchases);
-    } catch (error) {
-        console.error("Error retrieving weekly sales data:", error);
-        res.status(500).json({ message: "An error occurred while fetching sales data." });
-    }
+            AS total_cash FROM customer_purchase_log WHERE timeofpurchase >= $1 AND timeofpurchase < $2 `; 
+            
+            const result = await pool.query(query, [startTime, endTime]); 
+            if (result.rows.length > 0) { const row = result.rows[0]; 
+                hourlySales.push({ hour: String(hour).padStart(2, '0'), 
+                                    totalSales: row.total_sales_hour || 0, 
+                                    totalSalesFormatted: (row.total_sales_hour || 0).toFixed(2), 
+                                    totalCard: row.total_card || 0, totalCash: row.total_cash || 0, }); 
+                                } 
+                            } res.json(hourlySales); 
+                        } 
+    catch (error) { 
+        console.error("Error retrieving hourly sales data:", error); 
+        res.status(500).json({ message: "An error occurred while fetching sales data." }); 
+    } 
 });
 
 module.exports = router;
