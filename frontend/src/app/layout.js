@@ -1,5 +1,4 @@
 import './globals.css';
-import Navbar from './menuBoard/components/Navbar';
 
 export const metadata = {
   title: 'Panda Express',

@@ -4,7 +4,7 @@ import Image from "next/image";
 export default function Home() {
     return (
     <div className="relative flex flex-col min-h-screen bg-[#ce123c]">
-        <div className="absolute inset-0 w-[80%] h-[80%] overflow-hidden z-0">
+        <div className="absolute inset-0 w-full h-full overflow-hidden z-0">
             <video
                 autoPlay
                 loop
@@ -28,12 +28,12 @@ export default function Home() {
             />
             <div className="flex space-evenly">
                 <Link href="menuBoard"> 
-                    <button className="px-6 py-3 mr-4 text-white font-semibold rounded-lg homeScreenButton">
+                    <button className="px-6 py-3 mr-4 text-white font-semibold rounded-lg">
                         View Menu
                     </button>
                 </Link>
                 <Link href="customerOrder"> 
-                    <button className="px-6 py-3 text-white font-semibold rounded-lg homeScreenButton">
+                    <button className="px-6 py-3 text-white font-semibold rounded-lg">
                         Order
                     </button>
                 </Link>

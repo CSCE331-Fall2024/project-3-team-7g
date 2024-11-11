@@ -1,12 +1,12 @@
+// "use client";
+
 import React from 'react';
 import OptionButton from './OptionButton';
 const dotenv = require('dotenv').config();
 
-// Main component that creates multiple buttons using the map function
     const types = ["Side", "Entree", "Appetizer", "Drink", "Size"];
     let sets = []
     for (let i = 0; i < types.length; i++) {
-        // console.log(process.env.BACKEND_PORT + "<<<< THIS IS THE BACKEND PORT");
         await fetch(process.env.BACKEND_PORT + '/getItemsByType/' + types[i], {
             method: 'GET',
             headers: {
@@ -17,9 +17,8 @@ const dotenv = require('dotenv').config();
         .then(data => {
             sets.push(data);
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => console.error('Error:', JSON.stringify(error, Object.getOwnPropertyNames(error))));
     }
-    
 
     const buttonSets = {
         sides:  sets[0],
@@ -30,13 +29,13 @@ const dotenv = require('dotenv').config();
     };
 
     const ButtonList = ({ listType }) => {
-        const buttons = buttonSets[listType] || []; // Get the appropriate button set
+        const buttons = buttonSets[listType] || [];
     
         return (
             <div
                 style={{
                     display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', // Larger minimum size
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
                     gap: '16px',
                     padding: '16px',
                 }}
