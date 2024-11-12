@@ -27,6 +27,7 @@ export default function Entrees() {
               color: '#fff',
               borderRadius: '8px',
               fontSize: '1rem',
+              
           }}
         >
 
