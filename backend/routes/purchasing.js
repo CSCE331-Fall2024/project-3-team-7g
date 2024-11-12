@@ -8,7 +8,7 @@ router.use(express.json());
 router.post('/finalizePurchase', async (req, res) => {
 
     try {
-        const { orderId, isFinalized } = req.body;
+        const { orderId, isActuallyOrdering } = req.body;
         const getFromTableQuery = (table, item) => "SELECT " + item + " FROM " + table + " WHERE order_id = " + orderId + ';';
         const deleteFromTable = table => "DELETE FROM " + table + " WHERE order_id = " + orderId + ';';
 
@@ -21,12 +21,18 @@ router.post('/finalizePurchase', async (req, res) => {
                 res.status(500).json({message: "You either have no items for this given orderId or the database does not have accurate counts"});
             }
         else {
-            if (isFinalized == true) {
+            if (isActuallyOrdering == true) {
                 // We need to send to customer_purchase_log, and update inventory
 
                 
                 for (let i = 0; i < active_items.rowCount; i++) {
+                    // Get each ingredient's junction table stuff
+                    const getIngredientsOfItemQuery = "SELECT * FROM menu_to_ingredients where menu_id = " + active_items.at(i) + ";";
+                    const active_ingredients = await db.query(getIngredientsOfItemQuery);
 
+                    for (let j = 0; j < active_ingredients.rowCount; j++) {
+                        await db.execute("")
+                    }
                 }
 
 
