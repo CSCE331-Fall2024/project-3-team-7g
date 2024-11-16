@@ -22,9 +22,9 @@ export default function Home() {
                 <h1 className="px-4 text-2xl font-bold">Sizes</h1>
                 <ButtonList listType="sizes" handleItemClick={handleItemClick}></ButtonList>
                 <h1 className="px-4 text-2xl font-bold">Appetizers</h1>
-                <ButtonList listType="appetizers"></ButtonList>
+                <ButtonList listType="appetizers" handleItemClick={handleItemClick}></ButtonList>
                 <h1 className="px-4 text-2xl font-bold">Drinks</h1>
-                <ButtonList listType="drinks"></ButtonList>
+                <ButtonList listType="drinks" handleItemClick={handleItemClick}></ButtonList>
             </main>
         </div>
     );

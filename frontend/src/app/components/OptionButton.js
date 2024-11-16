@@ -28,7 +28,7 @@ const OptionButton = ({ OptionName, image, handleItemSelection}) => {
         padding: '8px',
         borderRadius: '8px',
     }}
-    onClick={handleItemSelection}
+    onClick={() => handleItemSelection(OptionName)}
     >
     <Image
         src={imgSrc}
