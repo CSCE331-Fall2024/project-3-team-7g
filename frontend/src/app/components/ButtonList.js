@@ -1,4 +1,4 @@
-// "use client";
+"use client";
 
 import React from 'react';
 import OptionButton from './OptionButton';
@@ -7,18 +7,24 @@ const dotenv = require('dotenv').config();
     const types = ["Side", "Entree", "Appetizer", "Drink", "Size"];
     let sets = []
     for (let i = 0; i < types.length; i++) {
-        await fetch(process.env.BACKEND_PORT + '/getItemsByType/' + types[i], {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
+        try {
+            const response = await fetch(process.env.NEXT_PUBLIC_BACKEND_PORT + '/getItemsByType/' + types[i], {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            
+            if (!response.ok) {
+                throw new Error(`Server responded with status ${response.status}`);
             }
-        })
-        .then(response => response.json())
-        .then(data => {
+    
+            const data = await response.json();
             sets.push(data);
-        })
-        .catch(error => console.error('Error:', JSON.stringify(error, Object.getOwnPropertyNames(error))));
-    }
+        } catch (error) {
+            console.error('Fetch error:', error.message);
+        }
+    }    
 
     const buttonSets = {
         sides:  sets[0],
@@ -28,9 +34,9 @@ const dotenv = require('dotenv').config();
         sizes: sets[4]
     };
 
-    const ButtonList = ({ listType }) => {
+    const ButtonList = ({ listType, handleItemClick }) => {
         const buttons = buttonSets[listType] || [];
-    
+
         return (
             <div
                 style={{
@@ -45,7 +51,8 @@ const dotenv = require('dotenv').config();
                     <OptionButton 
                         key={index} 
                         OptionName={button.OptionName} 
-                        image={button.image} 
+                        image={button.image}
+                        handleItemSelection={handleItemClick}
                     />
                 ))}
             </div>
