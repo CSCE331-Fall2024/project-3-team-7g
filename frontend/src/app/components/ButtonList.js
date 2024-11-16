@@ -51,6 +51,7 @@ const dotenv = require('dotenv').config();
                     <OptionButton 
                         key={index} 
                         OptionName={button.OptionName} 
+                        listType={listType}
                         image={button.image}
                         handleItemSelection={handleItemClick}
                     />

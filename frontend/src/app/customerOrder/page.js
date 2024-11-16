@@ -6,12 +6,15 @@ import { useEffect, useState } from "react";
 
 export default function Home() {
     const [selectedItem, setSelectedItem] = useState(null);
+    const [itemType, setItemType] = useState(null);
 
-    const handleItemClick = (item) => {
+    const handleItemClick = (itemType, item) => {
+        setItemType(itemType);
         setSelectedItem(item);
     };
 
     useEffect(() => {
+        console.log(itemType);
         console.log(selectedItem);
     }, [selectedItem]);
 
