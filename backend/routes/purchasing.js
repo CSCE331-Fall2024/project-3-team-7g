@@ -5,9 +5,23 @@ const router = express.Router();
 const db = require('../db');
 router.use(express.json());
 
+function getCurrentDateTime() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+  
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+
 /**
  * finalize purchase params:
  * orderId - orderId of purchase you want to finalize
+ * customerId
+ * cashOrCard - Describes payment method
  * isActuallyOrdering - boolean stating whether you want to send the purchase to
  *  completed purchase tables
  */
@@ -15,7 +29,7 @@ router.post('/finalizePurchase', async (req, res) => {
 
     try {
         let total = 0;
-        const { orderId, isActuallyOrdering } = req.body;
+        const { orderId, customerId, cashOrCard, isActuallyOrdering } = req.body;
         const getFromTableQuery = (table, item) => "SELECT " + item + " FROM " + table + " WHERE order_id = " + orderId + ';';
         const deleteFromTable = table => "DELETE FROM " + table + " WHERE order_id = " + orderId + ';';
 
@@ -23,7 +37,10 @@ router.post('/finalizePurchase', async (req, res) => {
         const active_amounts = await db.query(getFromTableQuery("active_amounts", "amounts"));
         const active_high_level_items = await db.query(getFromTableQuery("active_high_level_items", "high_item"));
 
-        if (active_high_level_items.rowCount == 0 || active_items.rowCount == 0 ||
+        if (cashOrCard != "Cash" && cashOrCard != "Card") {
+            res.status(500).json({message: "cashOrCard must be Cash or Card"});
+        }
+        else if (active_high_level_items.rowCount == 0 || active_items.rowCount == 0 ||
             active_items.rowCount != active_amounts.rowCount) {
                 res.status(500).json({message: "You either have no items for this given orderId or the database does not have accurate counts"});
             }
@@ -41,25 +58,25 @@ router.post('/finalizePurchase', async (req, res) => {
                     }
                 }
 
-                
-
                 for(let i = 0; i < active_high_level_items.rowCount; i++) {
                     const addToTotalQuery = "SELECT price FROM menu_pricing WHERE id = " + active_high_level_items.rows[i].high_item;
                     const resp = await db.query(addToTotalQuery);
                     total += resp.rows[0].price;
                 }
+                // TODO: Add to customer_purchase_log
+                const currentTime = getCurrentDateTime();
+                await db.query("INSERT INTO customer_purchase_log values (" + orderId + ", " + customerId + ", " + total + ", " + currentTime + ", "  + cashOrCard + ");");
+
             }
             // Clear from active purcahse
             await db.query(deleteFromTable("active_items"));
             await db.query(deleteFromTable("active_amounts"));
             await db.query(deleteFromTable("active_high_level_items"));
         }
-        // TODO: Add to customer_purchase_log
-
 
         res.status(200).json({
             "orderId" : orderId,
-            "status" : "Complete",
+            "status" : "Complete, " +  isActuallyOrdering ? "Sent to customerPurchaseLog" : "Refunded",
             "Total Cost" : total 
         });
 
