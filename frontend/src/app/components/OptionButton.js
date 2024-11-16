@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useState } from 'react';
 
-const OptionButton = ({ OptionName, image }) => {
+const OptionButton = ({ OptionName, image, handleItemSelection}) => {
     const [imgSrc, setImgSrc] = useState(`/${image}`);
     const [isFallback, setIsFallback] = useState(false);
 
@@ -28,6 +28,7 @@ const OptionButton = ({ OptionName, image }) => {
         padding: '8px',
         borderRadius: '8px',
     }}
+    onClick={handleItemSelection}
     >
     <Image
         src={imgSrc}
