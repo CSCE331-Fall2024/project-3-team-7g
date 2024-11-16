@@ -14,8 +14,7 @@ export default function Home() {
     };
 
     useEffect(() => {
-        console.log(itemType);
-        console.log(selectedItem);
+        console.log(`Item type is ${itemType}; Actual item is: ${selectedItem}`);
     }, [selectedItem]);
 
     return (
