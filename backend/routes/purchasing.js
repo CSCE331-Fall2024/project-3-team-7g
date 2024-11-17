@@ -65,7 +65,8 @@ router.post('/finalizePurchase', async (req, res) => {
                 }
                 // TODO: Add to customer_purchase_log
                 const currentTime = getCurrentDateTime();
-                await db.query("INSERT INTO customer_purchase_log values (" + orderId + ", " + customerId + ", " + total + ", " + currentTime + ", "  + cashOrCard + ");");
+                console.log("INSERT INTO customer_purchase_log VALUES (" + orderId + ", " + customerId + ", " + total + ", '" + currentTime + "', '"  + cashOrCard + "');");
+                await db.query("INSERT INTO customer_purchase_log VALUES (" + orderId + ", " + customerId + ", " + total + ", '" + currentTime + "', '"  + cashOrCard + "');");
 
             }
             // Clear from active purcahse
