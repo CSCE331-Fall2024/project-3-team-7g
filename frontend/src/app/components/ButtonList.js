@@ -53,7 +53,7 @@ const dotenv = require('dotenv').config();
                         OptionName={button.OptionName} 
                         image={button.image}
                         handleItemSelection={handleItemClick}
-                         = {isAccessible}
+                        isAccessible = {isAccessible}
                     />
                 ))}
             </div>

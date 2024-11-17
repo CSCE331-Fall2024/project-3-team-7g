@@ -3,19 +3,30 @@
 import Image from 'next/image';
 import { useState } from 'react';
 
-const OptionButton = ({ OptionName, image, handleItemSelection}) => {
+const OptionButton = ({ OptionName, image, handleItemSelection, isAccessible}) => {
     const [imgSrc, setImgSrc] = useState(`/${image}`);
     const [isFallback, setIsFallback] = useState(false);
-    const [isAccessible, setIsAccessible] = useState(false);
+    
 
     const handleImageError = () => {
     setIsFallback(true);
     setImgSrc('/no-image-icon.png');
     };
 
+    const buttonStyle = isAccessible
+    ? {
+        backgroundColor: "#FF5733", // Alternate style
+        color: "#000",
+      }
+    : {
+        backgroundColor: "#3498db", // Default style
+        color: "#fff",
+      };
+
     return (
     <button
     style={{
+        ...buttonStyle,
         width: '100%',
         height: '200px',
         color: '#fff',
