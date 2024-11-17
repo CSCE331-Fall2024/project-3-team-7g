@@ -6,13 +6,15 @@ import { useEffect, useState } from "react";
 
 export default function Home() {
     const [selectedItem, setSelectedItem] = useState(null);
+    const [itemType, setItemType] = useState(null);
 
-    const handleItemClick = (item) => {
+    const handleItemClick = (itemType, item) => {
+        setItemType(itemType);
         setSelectedItem(item);
     };
 
     useEffect(() => {
-        console.log(selectedItem);
+        console.log(`Item type is ${itemType}; Actual item is: ${selectedItem}`);
     }, [selectedItem]);
 
     return (
@@ -22,9 +24,9 @@ export default function Home() {
                 <h1 className="px-4 text-2xl font-bold">Sizes</h1>
                 <ButtonList listType="sizes" handleItemClick={handleItemClick}></ButtonList>
                 <h1 className="px-4 text-2xl font-bold">Appetizers</h1>
-                <ButtonList listType="appetizers"></ButtonList>
+                <ButtonList listType="appetizers" handleItemClick={handleItemClick}></ButtonList>
                 <h1 className="px-4 text-2xl font-bold">Drinks</h1>
-                <ButtonList listType="drinks"></ButtonList>
+                <ButtonList listType="drinks" handleItemClick={handleItemClick}></ButtonList>
             </main>
         </div>
     );
