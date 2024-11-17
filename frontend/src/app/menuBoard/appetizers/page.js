@@ -9,7 +9,7 @@ export default function Appetizers() {
       <Navbar />
       <main className="flex-grow flex flex-col p-4 text-center">
         <h1 className="text-3xl font-bold">Appetizers</h1>
-        <ButtonList listType="appetizers"></ButtonList>
+        <ButtonList listType="Appetizer"></ButtonList>
       </main>
     </div>
     );
