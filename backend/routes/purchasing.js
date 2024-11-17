@@ -31,10 +31,18 @@ router.post('/finalizePurchase', async (req, res) => {
 
         
         let total = 0;
-        const { orderId, customerId, cashOrCard, isActuallyOrdering } = req.body;
+
+        // const { orderId, customerId, cashOrCard, isActuallyOrdering } = req.body;
+        // Put back once we implement this
+        const {cashOrCard, isActuallyOrdering} = req.body;
+        const getOrderId = await db.query("SELECT MAX(orderid) FROM customer_purchase_log;");
+        const orderId = getOrderId.rows[0].max + 1;
+        const customerId = 2026;
+
         if (orderId == undefined || customerId == undefined || cashOrCard == undefined || isActuallyOrdering == undefined) {
             res.status(500).json({message: "All arguments are not given yet"});
         }
+
         
         const getFromTableQuery = (table, item) => "SELECT " + item + " FROM " + table + " WHERE order_id = " + orderId + ';';
         const deleteFromTable = table => "DELETE FROM " + table + " WHERE order_id = " + orderId + ';';
@@ -43,27 +51,32 @@ router.post('/finalizePurchase', async (req, res) => {
         const active_amounts = await db.query(getFromTableQuery("active_amounts", "amounts"));
         const active_high_level_items = await db.query(getFromTableQuery("active_high_level_items", "high_item"));
 
+
         if (cashOrCard != "Cash" && cashOrCard != "Card") {
             res.status(500).json({message: "cashOrCard must be Cash or Card"});
+            return;
         }
         else if (active_high_level_items.rowCount == 0 || active_items.rowCount == 0 ||
             active_items.rowCount != active_amounts.rowCount) {
                 res.status(500).json({message: "You either have no items for this given orderId or the database does not have accurate counts"});
+                return;
             }
         else {
+            
+
             if (isActuallyOrdering == true) {
                 // We need to send to customer_purchase_log, and update inventory
                 for (let i = 0; i < active_items.rowCount; i++) {
                     // Get each ingredient's junction table stuff
+
                     const getIngredientsOfItemQuery = "SELECT * FROM menu_to_ingredients where menu_id = " + active_items.rows[i].item + ";";
                     const active_ingredients = await db.query(getIngredientsOfItemQuery);
-
+                    
                     for (let j = 0; j < active_ingredients.rowCount; j++) {
                         const updateInventoryComm = "UPDATE inventory SET AMOUNT = AMOUNT - " + active_amounts.rows[i].amounts + " WHERE id = " +active_ingredients.rows[j].ingredient_id + ";";
                         await db.query(updateInventoryComm);
                     }
                 }
-
                 for(let i = 0; i < active_high_level_items.rowCount; i++) {
                     const addToTotalQuery = "SELECT price FROM menu_pricing WHERE id = " + active_high_level_items.rows[i].high_item;
                     const resp = await db.query(addToTotalQuery);
@@ -73,7 +86,6 @@ router.post('/finalizePurchase', async (req, res) => {
                 const currentTime = getCurrentDateTime();
                 console.log("INSERT INTO customer_purchase_log VALUES (" + orderId + ", " + customerId + ", " + total + ", '" + currentTime + "', '"  + cashOrCard + "');");
                 await db.query("INSERT INTO customer_purchase_log VALUES (" + orderId + ", " + customerId + ", " + total + ", '" + currentTime + "', '"  + cashOrCard + "');");
-
             }
             // Clear from active purcahse
             await db.query(deleteFromTable("active_items"));
@@ -104,8 +116,14 @@ router.post('/finalizePurchase', async (req, res) => {
  */
 router.post('/addToPurchase', async (req, res) => {
     try {
-        const {type, orderId, customerId, item} = req.body;
-        
+        // const {type, orderId, customerId, item} = req.body;
+        // Put back once we fully implement it
+        const {type, item} = req.body;
+        const getOrderId = await db.query("SELECT MAX(orderid) FROM customer_purchase_log;");
+        const orderId = getOrderId.rows[0].max + 1;
+        const customerId = 2026;
+
+
         let verifyingTable = "";
         let tableToAddTo = "";
 
@@ -130,13 +148,17 @@ router.post('/addToPurchase', async (req, res) => {
                 res.status(500).json({"message": "type does not exist: " + type});
                 return;
         }
-        const assertItemExists = await db.query("SELECT * FROM " + verifyingTable + " WHERE id = " + item);
+        const assertItemExists = await db.query("SELECT * FROM " + verifyingTable + " WHERE name = '" + item + "'");
+        let itemId = -1;
         if (assertItemExists.rowCount == 0) {
-            res.status(500).json({"message": "There are no items associated with id = " + item});
+            res.status(500).json({"message": "There are no items associated with name = " + item });
             return;
         }
+        itemId = assertItemExists.rows[0].id;
+
         // Maybe unsafe?
-        await db.query("INSERT INTO " + tableToAddTo + " values (" + orderId + ", " + customerId + ", " + item + ");");
+        console.log("INSERT INTO " + tableToAddTo + " values (" + orderId + ", " + customerId + ", " + itemId + ");");
+        await db.query("INSERT INTO " + tableToAddTo + " values (" + orderId + ", " + customerId + ", " + itemId + ");");
         res.status(200).json({
             "orderId" : orderId,
             "status" : "successful insertion",
