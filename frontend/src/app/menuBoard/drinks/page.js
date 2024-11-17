@@ -1,6 +1,5 @@
-import ButtonList from "../components/ButtonList";
+import ButtonList from "../../components/ButtonList";
 import Navbar from "../components/Navbar";
-import OptionButton from "../components/OptionButton";
 
 // Creates page and adds navbar. Adds the title and button list of entrees.
 export default function Drinks() {
@@ -10,7 +9,7 @@ export default function Drinks() {
       <Navbar />
       <main className="flex-grow flex flex-col p-4 text-center">
         <h1 className="text-3xl font-bold">Drinks</h1>
-        <ButtonList listType="drinks"></ButtonList>
+        <ButtonList listType="Drink"></ButtonList>
       </main>
     </div>
     );

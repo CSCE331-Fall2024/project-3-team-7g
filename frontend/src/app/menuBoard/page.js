@@ -1,8 +1,7 @@
-import ButtonList from "./components/ButtonList";
+import ButtonList from "../components/ButtonList";
 import Navbar from "./components/Navbar";
 
 export default function Sizes() {
-  
     return (
     <div className="flex flex-col min-h-screen bg-white text-gray-900">
       <Navbar />

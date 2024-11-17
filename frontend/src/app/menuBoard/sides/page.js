@@ -1,6 +1,6 @@
 import Navbar from "../components/Navbar";
-import OptionButton from "../components/OptionButton";
-import ButtonList from "../components/ButtonList";
+import OptionButton from "../../components/OptionButton";
+import ButtonList from "../../components/ButtonList";
 
 // Creates page and adds navbar. Adds the title and button list of entrees.
 export default function Sides() {
