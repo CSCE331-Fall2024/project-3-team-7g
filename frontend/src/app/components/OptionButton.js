@@ -13,20 +13,17 @@ const OptionButton = ({ OptionName, image, handleItemSelection, isAccessible}) =
     setImgSrc('/no-image-icon.png');
     };
 
-    const buttonStyle = isAccessible
-    ? {
-        backgroundColor: "#FF5733", // Alternate style
-        color: "#000",
-      }
-    : {
-        backgroundColor: "#3498db", // Default style
-        color: "#fff",
-      };
+    // const buttonStyle = isAccessible
+    // ? {
+    //     backgroundColor: "#FF5733", // Alternate style
+    //     color: "#000",
+    //   }
+    // : {
+    //     backgroundColor: "#3498db", // Default style
+    //     color: "#fff",
+    //   };
 
-    return (
-    <button
-    style={{
-        ...buttonStyle,
+    const normalStyle = {
         width: '100%',
         height: '200px',
         color: '#fff',
@@ -39,7 +36,42 @@ const OptionButton = ({ OptionName, image, handleItemSelection, isAccessible}) =
         textShadow: '1px 1px 2px rgba(0, 0, 0, 0.8)',
         padding: '8px',
         borderRadius: '8px',
-    }}
+    };
+
+    const accessibleStyle = {
+        width: '100%',
+        height: '350px',
+        color: '#fff',
+        border: 'none',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: '24px',
+        fontWeight: 'bold',
+        textShadow: '1px 1px 2px rgba(0, 0, 0, 0.8)',
+        padding: '8px',
+        borderRadius: '8px',
+    };
+
+    return (
+    <button
+    style={isAccessible ? accessibleStyle : normalStyle}
+    // style={{
+    //     ...buttonStyle,
+    //     width: '100%',
+    //     height: '200px',
+    //     color: '#fff',
+    //     border: 'none',
+    //     display: 'flex',
+    //     flexDirection: 'column',
+    //     alignItems: 'center',
+    //     justifyContent: 'center',
+    //     fontSize: '1rem',
+    //     textShadow: '1px 1px 2px rgba(0, 0, 0, 0.8)',
+    //     padding: '8px',
+    //     borderRadius: '8px',
+    // }}
     onClick={handleItemSelection}
     >
     <Image
