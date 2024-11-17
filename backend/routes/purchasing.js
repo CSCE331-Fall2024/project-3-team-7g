@@ -28,8 +28,14 @@ function getCurrentDateTime() {
 router.post('/finalizePurchase', async (req, res) => {
 
     try {
+
+        
         let total = 0;
         const { orderId, customerId, cashOrCard, isActuallyOrdering } = req.body;
+        if (orderId == undefined || customerId == undefined || cashOrCard == undefined || isActuallyOrdering == undefined) {
+            res.status(500).json({message: "All arguments are not given yet"});
+        }
+        
         const getFromTableQuery = (table, item) => "SELECT " + item + " FROM " + table + " WHERE order_id = " + orderId + ';';
         const deleteFromTable = table => "DELETE FROM " + table + " WHERE order_id = " + orderId + ';';
 
@@ -99,6 +105,7 @@ router.post('/finalizePurchase', async (req, res) => {
 router.post('/addToPurchase', async (req, res) => {
     try {
         const {type, orderId, customerId, item} = req.body;
+        
         let verifyingTable = "";
         let tableToAddTo = "";
 
