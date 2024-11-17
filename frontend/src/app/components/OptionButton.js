@@ -40,14 +40,14 @@ const OptionButton = ({ OptionName, image, handleItemSelection, isAccessible}) =
 
     const accessibleStyle = {
         width: '100%',
-        height: '350px',
+        height: '400px',
         color: '#fff',
         border: 'none',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        fontSize: '24px',
+        fontSize: '36px',
         fontWeight: 'bold',
         textShadow: '1px 1px 2px rgba(0, 0, 0, 0.8)',
         padding: '8px',

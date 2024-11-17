@@ -16,9 +16,12 @@ export default function Sizes() {
         <ButtonList listType="sizes" isAccessible={isAccessible}></ButtonList>
         <button
           onClick={toggleStyle}
-          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg"
+          className="fixed bottom-4 right-4 px-4 py-2 bg-blue-500 text-white rounded-lg shadow-lg font-bold"
         
-        ></button>
+        >
+          Accessibility help
+
+        </button>
       </main>
     </div>
     );
