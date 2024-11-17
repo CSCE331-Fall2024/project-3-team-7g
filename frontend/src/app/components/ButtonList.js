@@ -34,7 +34,7 @@ const dotenv = require('dotenv').config();
         sizes: sets[4]
     };
 
-    const ButtonList = ({ listType, handleItemClick }) => {
+    const ButtonList = ({ listType, handleItemClick, isAccessible}) => {
         const buttons = buttonSets[listType] || [];
 
         return (
@@ -53,6 +53,7 @@ const dotenv = require('dotenv').config();
                         OptionName={button.OptionName} 
                         image={button.image}
                         handleItemSelection={handleItemClick}
+                         = {isAccessible}
                     />
                 ))}
             </div>

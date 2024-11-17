@@ -6,6 +6,7 @@ import { useState } from 'react';
 const OptionButton = ({ OptionName, image, handleItemSelection}) => {
     const [imgSrc, setImgSrc] = useState(`/${image}`);
     const [isFallback, setIsFallback] = useState(false);
+    const [isAccessible, setIsAccessible] = useState(false);
 
     const handleImageError = () => {
     setIsFallback(true);
