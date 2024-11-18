@@ -26,7 +26,7 @@ export default function Home() {
                 height={500}
                 className="rounded-lg mb-10"
             />
-            <div className="flex space-evenly">
+            <div className="flex justify-center items-center w-full max-w-3xl space-x-4">
                 <Link href="menuBoard"> 
                     <button className="px-6 py-3 mr-4 text-white font-semibold rounded-lg">
                         View Menu
@@ -35,6 +35,11 @@ export default function Home() {
                 <Link href="customerOrder"> 
                     <button className="px-6 py-3 text-white font-semibold rounded-lg">
                         Order
+                    </button>
+                </Link>
+                <Link href="ManagerScreen"> 
+                    <button className="px-6 py-3 text-white font-semibold rounded-lg">
+                        Manager
                     </button>
                 </Link>
             </div>

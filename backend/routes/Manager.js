@@ -69,6 +69,46 @@ router.post('/addQuantity', async (req, res) => {
     }
 );
 
+router.post('/updateMenuPricing', async (req, res) => {
+    const { id, price } = req.body;
+
+    try {
+        // Check if the menu item exists
+        const query = 'SELECT id FROM menu_pricing WHERE id = $1';
+        const result = await db.query(query, [id]);
+
+        if (result.rows.length > 0) {
+            // Menu item exists, update its price
+            const updateQuery = 'UPDATE menu_pricing SET price = $1 WHERE id = $2';
+            const updateResult = await db.query(updateQuery, [price, id]);
+
+            if (updateResult.rowCount > 0) {
+                res.json({ message: `Price updated successfully for item ID ${id}` });
+            } else {
+                res.status(500).json({ message: "Failed to update menu item price." });
+            }
+        } else {
+            // Menu item not found
+            res.status(404).json({ message: `Menu item not found for ID: ${id}` });
+        }
+    } catch (err) {
+        console.error("Error updating menu pricing:", err);
+        res.status(500).json({ message: "Internal server error." });
+    }
+});
+
+
+router.get('/getMenuItems', async (req, res) => {
+    try {
+        const result = await db.query("SELECT id, name, type FROM menu");
+        res.json(result.rows);
+    } catch (error) {
+        console.error("Error fetching menu items:", error);
+        res.status(500).json({ message: "Error retrieving menu items." });
+    }
+});
+
+
 router.get('/getWeeklySales/:year/:month/:day', async (req, res) => {
     const { year, month, day } = req.params;
 
