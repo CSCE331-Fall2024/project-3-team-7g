@@ -3,7 +3,9 @@
 import Image from 'next/image';
 import { useState } from 'react';
 
+
 const OptionButton = ({ OptionName, image, handleItemSelection, isAccessible}) => {
+
     const [imgSrc, setImgSrc] = useState(`/${image}`);
     const [isFallback, setIsFallback] = useState(false);
     
@@ -59,6 +61,7 @@ const OptionButton = ({ OptionName, image, handleItemSelection, isAccessible}) =
         textShadow: '1px 1px 2px rgba(0, 0, 0, 0.8)',
         padding: '8px',
         borderRadius: '8px',
+
     };
 
     const accessibleStyle = {
@@ -80,22 +83,12 @@ const OptionButton = ({ OptionName, image, handleItemSelection, isAccessible}) =
     return (
     <button
     style={isAccessible ? accessibleStyle : normalStyle}
-    // style={{
-    //     ...buttonStyle,
-    //     width: '100%',
-    //     height: '200px',
-    //     color: '#fff',
-    //     border: 'none',
-    //     display: 'flex',
-    //     flexDirection: 'column',
-    //     alignItems: 'center',
-    //     justifyContent: 'center',
-    //     fontSize: '1rem',
-    //     textShadow: '1px 1px 2px rgba(0, 0, 0, 0.8)',
-    //     padding: '8px',
-    //     borderRadius: '8px',
-    // }}
-    onClick={handleItemSelection}
+
+
+
+
+    onClick={() => handleItemSelection(listType, OptionName)}
+
     >
     <Image
         

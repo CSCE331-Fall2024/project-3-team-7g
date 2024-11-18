@@ -29,8 +29,8 @@ const dotenv = require('dotenv').config();
     const buttonSets = {
         sides:  sets[0],
         entrees: sets[1],
-        appetizers: sets[2],
-        drinks: sets[3],
+        Appetizer: sets[2],
+        Drink: sets[3],
         sizes: sets[4]
     };
 
@@ -51,6 +51,7 @@ const dotenv = require('dotenv').config();
                     <OptionButton 
                         key={index} 
                         OptionName={button.OptionName} 
+                        listType={listType}
                         image={button.image}
                         handleItemSelection={handleItemClick}
                         isAccessible = {isAccessible}
