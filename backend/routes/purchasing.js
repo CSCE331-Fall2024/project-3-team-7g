@@ -149,16 +149,18 @@ router.post('/addToPurchase', async (req, res) => {
                 return;
         }
         const assertItemExists = await db.query("SELECT * FROM " + verifyingTable + " WHERE name = '" + item + "'");
-        let itemId = -1;
         if (assertItemExists.rowCount == 0) {
             res.status(500).json({"message": "There are no items associated with name = " + item });
             return;
         }
-        itemId = assertItemExists.rows[0].id;
+        const itemId = assertItemExists.rows[0].id;
+        
+        const itemCounterQuery = await db.query("SELECT COUNT(*) FROM " + tableToAddTo + " WHERE order_id = " + orderId)
+        const itemCountInOrder = itemCounterQuery.rows[0].count;
 
         // Maybe unsafe?
-        console.log("INSERT INTO " + tableToAddTo + " values (" + orderId + ", " + customerId + ", " + itemId + ");");
-        await db.query("INSERT INTO " + tableToAddTo + " values (" + orderId + ", " + customerId + ", " + itemId + ");");
+        console.log("INSERT INTO " + tableToAddTo + " values (" + orderId + ", " + customerId + ", " + itemId + ", " + itemCountInOrder + ");");
+        await db.query("INSERT INTO " + tableToAddTo + " values (" + orderId + ", " + customerId + ", " + itemId + ", " + itemCountInOrder + ");");
         res.status(200).json({
             "orderId" : orderId,
             "status" : "successful insertion",
