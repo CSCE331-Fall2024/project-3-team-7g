@@ -16,7 +16,7 @@ const Plate = () => {
     const handleItemClick = (listType, item) => {
         const maxSelections = {
             entrees: 2,
-            sides: 1,
+            sides: 2,
         };
 
         setSelectedItems((prev) => {
@@ -66,6 +66,7 @@ const Plate = () => {
             <Navbar screen={"Choose 1 Side and 2 Entrees"} />
             <main className="flex-grow flex flex-col p-4">
                 <h1 className="px-4 text-2xl font-bold">Sides</h1>
+                <p className="px-4 text-sm text-gray-600">Choose a Side, or Get Half and Half</p>
                 <ButtonList
                     listType="sides"
                     selectedItems={selectedItems.sides}

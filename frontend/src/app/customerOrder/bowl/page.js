@@ -2,37 +2,107 @@
 
 import Navbar from "../components/Navbar";
 import ButtonList from "@/app/components/ButtonList";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 
-export default function bowl() {
-    // const router = useRouter();
-    const [selectedItem, setSelectedItem] = useState(null);
-    const [itemType, setItemType] = useState(null);
-    // const size = router.query.size;
-    // console.log(size);
+const Bowl = () => {
+    const [selectedItems, setSelectedItems] = useState({
+        sides: [],
+        entrees: [],
+    });
 
-    const handleItemClick = (itemType, item) => {
-        setItemType(itemType);
-        setSelectedItem(item);
+    const [popupMessage, setPopupMessage] = useState("");
+    const [isPopupVisible, setIsPopupVisible] = useState(false);
+
+    const handleItemClick = (listType, item) => {
+        const maxSelections = {
+            entrees: 1,
+            sides: 2,
+        };
+
+        setSelectedItems((prev) => {
+            const isSelected = prev[listType].includes(item);
+            const currentSelections = prev[listType];
+
+            if (isSelected) {
+                hidePopup();
+                const updatedItems = currentSelections.filter((i) => i !== item);
+                return {
+                    ...prev,
+                    [listType]: updatedItems,
+                };
+            }
+
+            if (currentSelections.length < maxSelections[listType]) {
+                hidePopup();
+                return {
+                    ...prev,
+                    [listType]: [...currentSelections, item],
+                };
+            }
+
+            showPopup(
+                `You can only select up to ${maxSelections[listType]} ${listType}. Deselect an item to add another.`
+            );
+            return prev;
+        });
     };
 
+    const showPopup = (message) => {
+        setPopupMessage(message);
+        setIsPopupVisible(true);
 
-    useEffect(() => {
-        if (selectedItem != '') {
-            console.log(`Chose ${selectedItem}`);
-        }
-    }, [selectedItem]);
+        setTimeout(() => {
+            setIsPopupVisible(false);
+        }, 3000);
+    };
+
+    const hidePopup = () => {
+        setPopupMessage("");
+        setIsPopupVisible(false);
+    };
 
     return (
         <div className="relative flex flex-col min-h-screen bg-white">
-            <Navbar screen={'Choose Items'}/>
+            <Navbar screen={"Choose 1 Side and 1 Entree"} />
             <main className="flex-grow flex flex-col p-4">
                 <h1 className="px-4 text-2xl font-bold">Sides</h1>
-                <ButtonList listType="sides" handleItemClick={handleItemClick}></ButtonList>
+                <p className="px-4 text-sm text-gray-600">Choose a Side, or Get Half and Half</p>
+                <ButtonList
+                    listType="sides"
+                    selectedItems={selectedItems.sides}
+                    handleItemClick={handleItemClick}
+                />
                 <h1 className="px-4 text-2xl font-bold">Entrees</h1>
-                <ButtonList listType="entrees" handleItemClick={handleItemClick}></ButtonList>
+                <ButtonList
+                    listType="entrees"
+                    selectedItems={selectedItems.entrees}
+                    handleItemClick={handleItemClick}
+                />
             </main>
+
+            {isPopupVisible && (
+                <div
+                    style={{
+                        position: "fixed",
+                        top: "20px",
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        padding: "16px",
+                        backgroundColor: "#ffcccc",
+                        color: "#d8000c",
+                        borderRadius: "8px",
+                        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                        zIndex: 1000,
+                        textAlign: "center",
+                        width: "90%",
+                        maxWidth: "400px",
+                    }}
+                >
+                    {popupMessage}
+                </div>
+            )}
         </div>
     );
-}
+};
+
+export default Bowl;
