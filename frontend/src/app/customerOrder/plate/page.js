@@ -79,7 +79,6 @@ const Plate = () => {
                 />
             </main>
 
-            {/* Popup notification */}
             {isPopupVisible && (
                 <div
                     style={{
@@ -92,7 +91,7 @@ const Plate = () => {
                         color: "#d8000c",
                         borderRadius: "8px",
                         boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-                        zIndex: 1000, // Ensure it appears above all other content
+                        zIndex: 1000,
                         textAlign: "center",
                         width: "90%",
                         maxWidth: "400px",
