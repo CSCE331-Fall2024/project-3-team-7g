@@ -22,6 +22,29 @@ const OptionButton = ({ OptionName, image, handleItemSelection, isAccessible}) =
     //     backgroundColor: "#3498db", // Default style
     //     color: "#fff",
     //   };
+    // const fallBackSet = {
+    //     objectFit: 'contain',
+    //     marginBottom: '2em',
+    //     width: '100px',
+    //     height: '100px'
+    // };
+    // const imgNormStyle = {
+    //     objectFit: 'contain',
+    //     marginBottom: '2em',
+    //     width: '180px',
+    //     height: '180px',
+    //   };
+      
+    //   const imgAltStyle = {
+    //     objectFit: 'contain',
+    //     width: '240px',
+    //     height: '240px',
+    //   };
+    const imgStyle = isFallback
+    ? { width: 100, height: 100, objectFit: 'contain', marginBottom: '1em' }
+    : isAccessible
+    ? { width: 240, height: 240, objectFit: 'contain', marginBottom: '1em' }
+    : { width: 180, height: 180, objectFit: 'contain', marginBottom: '2em' };
 
     const normalStyle = {
         width: '100%',
@@ -75,15 +98,26 @@ const OptionButton = ({ OptionName, image, handleItemSelection, isAccessible}) =
     onClick={handleItemSelection}
     >
     <Image
+        
+        
         src={imgSrc}
         alt={`${OptionName} Image`}
-        width={isFallback ? 100 : 180}
-        height={isFallback ? 100 : 180}
-        style={{
-            objectFit: 'contain',
-            marginBottom: '2em', 
-        }}
+        
+        width={imgStyle.width}
+        height={imgStyle.height}
+        style={imgStyle}
+        // width={isFallback ? 100 : isAccessible ? imgAltStyle.width : imgNormStyle.width}
+        // height={isFallback ? 100 : isAccessible ? imgAltStyle.height : imgNormStyle.height}
+        // style={isAccessible ? imgAltStyle : imgNormStyle}
+        
+        // style={{
+        //     objectFit: 'contain',
+        //     marginBottom: '2em', 
+ 
+        // }}
+        
         onError={handleImageError}
+        
     />
     {OptionName}
     </button>
