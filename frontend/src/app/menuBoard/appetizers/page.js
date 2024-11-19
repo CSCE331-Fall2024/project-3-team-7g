@@ -16,15 +16,15 @@ export default function Appetizers() {
       <Navbar />
       <main className="flex-grow flex flex-col p-4 text-center">
 
-        <h1 className="text-3xl font-bold">Entrees</h1>
+        <h1 className="text-3xl font-bold">Appetizers</h1>
 
-        <ButtonList listType="appetizers" isAccessible={isAccessible}></ButtonList>
+        <ButtonList listType="Appetizer" isAccessible={isAccessible}></ButtonList>
         <button
           onClick={toggleStyle}
           className="fixed bottom-4 right-4 px-4 py-2 bg-blue-500 text-white rounded-lg shadow-lg font-bold"
         
         >
-          Accessibility help
+          Visual Aid
 
         </button>
 
