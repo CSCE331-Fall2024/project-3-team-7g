@@ -108,6 +108,16 @@ router.get('/getMenuItems', async (req, res) => {
     }
 });
 
+router.get('/getMenuPrices', async (req, res) => {
+    try {
+        const result = await db.query("SELECT id, name, price FROM menu_pricing");
+        res.json(result.rows);
+    } catch (error) {
+        console.error("Error fetching menu prices:", error);
+        res.status(500).json({ message: "Error retrieving menu prices." });
+    }
+});
+
 
 router.get('/getWeeklySales/:year/:month/:day', async (req, res) => {
     const { year, month, day } = req.params;
