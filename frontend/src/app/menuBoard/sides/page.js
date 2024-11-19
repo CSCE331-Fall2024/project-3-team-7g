@@ -15,7 +15,7 @@ export default function Sides() {
     <div className="flex flex-col min-h-screen bg-white text-gray-900">
       <Navbar />
       <main className="flex-grow flex flex-col p-4 text-center">
-        <h1 className="text-3xl font-bold">Entrees</h1>
+        <h1 className="text-3xl font-bold">Sides</h1>
 
         <ButtonList listType="sides" isAccessible={isAccessible}></ButtonList>
         <button
@@ -23,7 +23,7 @@ export default function Sides() {
           className="fixed bottom-4 right-4 px-4 py-2 bg-blue-500 text-white rounded-lg shadow-lg font-bold"
         
         >
-          Accessibility help
+          Visual Aid
 
         </button>
       </main>
