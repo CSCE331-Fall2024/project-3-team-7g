@@ -9,18 +9,18 @@ router.use(express.json());
 
 
 router.post('/addInventoryItem', async (req, res) => {
-    const { ingredientName, amount } = req.body;
+    const { name, amount } = req.body;
 
     const idResult = await db.query("SELECT MAX(id) AS highest_id FROM menu");
     const highestId = idResult.rows[0].highest_id || 0;
     const id = highestId + 1;
 
     const insertQuery = "INSERT INTO inventory (id, name, amount) VALUES ($1, $2, $3)";
-    const updateResult = await db.query(insertQuery, [id, ingredientName, amount]);
+    const updateResult = await db.query(insertQuery, [id, name, amount]);
 
 
     if (updateResult.rowCount > 0) {
-        res.json({ message: `Successfully added ${ingredientName} with an amount of ${amount}` });
+        res.json({ message: `Successfully added ${name} with an amount of ${amount}` });
     } else {
         res.status(500).json({ message: "Something went wrong while adding the item" });
     }
@@ -47,24 +47,24 @@ router.post('/addMenuItem', async (req, res) => {
 );
 
 router.post('/addQuantity', async (req, res) => {
-    const { ingredientName, amountToAdd } = req.body;
+    const { name, amount } = req.body;
 
     const query = 'SELECT amount FROM inventory WHERE name = $1';
-    const result = await db.query(query, [ingredientName]);
+    const result = await db.query(query, [name]);
 
         if (result.rows.length > 0) {
             // Ingredient exists, so update
             const updateQuery = 'UPDATE inventory SET amount = amount + $1 WHERE name = $2';
-            const updateResult = await db.query(updateQuery, [amountToAdd, ingredientName]);
+            const updateResult = await db.query(updateQuery, [amount, name]);
 
             if (updateResult.rowCount > 0) {
-                res.json({ message: `Successfully added ${amountToAdd} units to ${ingredientName}` });
+                res.json({ message: `Successfully added ${amount} units to ${name}` });
             } else {
                 res.status(500).json({ message: "Something went wrong while updating the ingredient." });
             }
         } else {
             // Ingredient not found
-            res.status(404).json({ message: `Ingredient not found: ${ingredientName}` });
+            res.status(404).json({ message: `Ingredient not found: ${name}` });
         }
     }
 );
@@ -115,6 +115,16 @@ router.get('/getMenuPrices', async (req, res) => {
     } catch (error) {
         console.error("Error fetching menu prices:", error);
         res.status(500).json({ message: "Error retrieving menu prices." });
+    }
+});
+
+router.get('/getItemInventory', async (req, res) => {
+    try {
+        const result = await db.query("SELECT id, name, amount FROM inventory");
+        res.json(result.rows);
+    } catch (error) {
+        console.error("Error fetching menu prices:", error);
+        res.status(500).json({ message: "Error retrieving inventory." });
     }
 });
 
