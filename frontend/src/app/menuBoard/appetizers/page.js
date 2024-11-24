@@ -5,11 +5,10 @@ import Navbar from "../components/Navbar";
 
 // Creates page and adds navbar. Adds the title and button list of entrees.
 export default function Appetizers() {
-
-  const [isAccessible, setIsAccessible] = useState(false);
-  const toggleStyle = () => {
-    setIsAccessible((prev) => !prev);
-  };
+//   const [isAccessible, setIsAccessible] = useState(false);
+//   const toggleStyle = () => {
+//     setIsAccessible((prev) => !prev);
+//   };
   
     return (
     <div className="flex flex-col min-h-screen bg-white text-gray-900">

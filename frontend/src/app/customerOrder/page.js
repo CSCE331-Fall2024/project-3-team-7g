@@ -20,21 +20,66 @@ export default function Home() {
         setSelectedItem(item);
     };
 
-    const addHighLevelItem = async (type, itemName) => {
+    const addNormalItem = async (type, itemName) => {
         try {
-            // await fetch(`${import.meta.env.NEXT_PUBLIC_BACKEND_PORT}`, {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json'
-            //     },
-            //     body: JSON.stringify({
-            //     })
-            // });
-            if (type == 'Appetizer' || type == 'Drink') {
-                console.log(`Adding ${itemName} to cart`);
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PORT}/purchasing/addToPurchase`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    type,
+                    item: itemName,
+                }),
+            });
 
+            if (!response.ok) {
+                throw new Error(`Server responded with status ${response.status}`);
+            }
+    
+            const responseData = await response.json();
+    
+            console.log('Response JSON:', responseData);
+        } catch (error) {
+            console.log("Error adding item to database")
+        }
+    }
+
+    const addHighLevelItem = async (type, itemName) => {
+        let sentItem;
+        if (type == 'Appetizer' || type == 'Drink') {
+            sentItem = type;
+        } else {
+            sentItem = itemName;
+        }
+
+        console.log(sentItem);
+
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PORT}/purchasing/addToPurchase`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    type: "highItem",
+                    item: sentItem,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Server responded with status ${response.status}`);
+            }
+    
+            const responseData = await response.json();
+    
+            console.log('Response JSON:', responseData);
+            
+            if (type == 'Appetizer' || type == 'Drink') {
+                console.log(`type is ${type}`);
+                await addNormalItem("item", itemName);
             } else {
-                console.log(`You are now ordering a ${itemType}, redirecting you to the entree and side screen`);
+                console.log(`You are now ordering a ${itemName}, redirecting you to the entree and side screen`);
                 if (itemName == 'A La Carte') {
                     router.push(`/customerOrder/aLaCarte`);
                 } else if (itemName == 'Bowl') {
@@ -44,12 +89,6 @@ export default function Home() {
                 } else if (itemName == 'Bigger Plate') {
                     router.push(`/customerOrder/biggerPlate`);
                 }
-                // router.push({
-                //     pathname: '/customerOrder/entreesAndSides',
-                //     query: { size: encodeURIComponent(itemType) },
-                // });
-                // router.push('/customerOrder/entreesAndSides');
-                
             }
         } catch (error) {
             console.log("Error adding high level item to database")
