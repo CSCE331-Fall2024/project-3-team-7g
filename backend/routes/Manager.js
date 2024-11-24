@@ -128,6 +128,51 @@ router.get('/getItemInventory', async (req, res) => {
     }
 });
 
+router.post('/getUsageData', async (req, res) => {
+    try {
+        const { startYear, startMonth, startDay, startHour, endYear, endMonth, endDay, endHour } = req.body;
+
+        if (!startYear || !startMonth || !startDay || !startHour || !endYear || !endMonth || !endDay || !endHour) {
+            return res.status(400).json({ message: "All date and time fields are required." });
+        }
+
+        const startYearInt = parseInt(startYear);
+        const startMonthInt = parseInt(startMonth);
+        const startDayInt = parseInt(startDay);
+        const startHourInt = parseInt(startHour);
+        const endYearInt = parseInt(endYear);
+        const endMonthInt = parseInt(endMonth);
+        const endDayInt = parseInt(endDay);
+        const endHourInt = parseInt(endHour);
+
+        if (
+            startMonthInt < 1 || startMonthInt > 12 || endMonthInt < 1 || endMonthInt > 12 ||
+            startDayInt < 1 || startDayInt > 31 || endDayInt < 1 || endDayInt > 31 ||
+            startHourInt < 0 || startHourInt > 23 || endHourInt < 0 || endHourInt > 23
+        ) {
+            return res.status(400).json({ message: "Invalid date or time values." });
+        }
+
+        const startTimestamp = `${startYearInt}-${startMonthInt.toString().padStart(2, '0')}-${startDayInt.toString().padStart(2, '0')} ${startHourInt.toString().padStart(2, '0')}:00:00`;
+        const endTimestamp = `${endYearInt}-${endMonthInt.toString().padStart(2, '0')}-${endDayInt.toString().padStart(2, '0')} ${endHourInt.toString().padStart(2, '0')}:00:00`;
+
+        const query = `
+            SELECT i.id, i.name, SUM(ms.quantity_bought) AS total_usage
+            FROM menu_sales ms
+            JOIN menu_to_ingredients mi ON ms.menu_id = mi.menu_id
+            JOIN inventory i ON mi.ingredient_id = i.id
+            WHERE ms.purchase_date BETWEEN $1 AND $2
+            GROUP BY i.id, i.name
+        `;
+
+        const result = await db.query(query, [startTimestamp, endTimestamp]);
+
+        res.json(result.rows);
+    } catch (error) {
+        console.error("Error fetching usage data:", error);
+        res.status(500).json({ message: "Error retrieving usage data." });
+    }
+});
 
 router.get('/getWeeklySales/:year/:month/:day', async (req, res) => {
     const { year, month, day } = req.params;
