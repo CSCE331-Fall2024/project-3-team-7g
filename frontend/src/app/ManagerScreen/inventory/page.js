@@ -10,21 +10,25 @@ export default function InventoryManagement() {
     const [error, setError] = useState("");
   
     useEffect(() => {
-      async function fetchItemInventory() {
-        try {
-          const response = await fetch("http://localhost:3000/Manager/getItemInventory/");
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
+        async function fetchItemInventory() {
+          try {
+            const response = await fetch("http://localhost:3000/Manager/getItemInventory/");
+            if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const data = await response.json();
+      
+            // Sort inventory by id
+            const sortedData = data.sort((a, b) => a.id - b.id);
+      
+            setInventory(sortedData);
+          } catch (err) {
+            console.error("Error fetching inventory:", err);
+            setError("Failed to fetch inventory.");
           }
-          const data = await response.json();
-          setInventory(data);
-        } catch (err) {
-          console.error("Error fetching inventory:", err);
-          setError("Failed to fetch inventory.");
         }
-      }
-      fetchItemInventory();
-    }, []);
+        fetchItemInventory();
+      }, []);
   
     const handleInputChange = (e) => {
       const { name, value } = e.target;
