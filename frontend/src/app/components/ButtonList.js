@@ -34,7 +34,7 @@ const dotenv = require('dotenv').config();
         sizes: sets[4]
     };
 
-    const ButtonList = ({ listType, handleItemClick, selectedItems }) => {
+    const ButtonList = ({ listType, handleItemClick, selectedItems, isAccessible}) => {
         const buttons = buttonSets[listType] || [];
     
         return (
@@ -62,6 +62,7 @@ const dotenv = require('dotenv').config();
                             image={button.image}
                             handleItemSelection={handleItemClick}
                             isSelected={isSelected}
+                            isAccessible = {isAccessible}
                         />
                     );
                 })}

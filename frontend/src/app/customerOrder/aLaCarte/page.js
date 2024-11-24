@@ -8,6 +8,7 @@ const ALaCarte = () => {
     const [selectedItems, setSelectedItems] = useState({
         entrees: []
     });
+    
 
     const [popupMessage, setPopupMessage] = useState("");
     const [isPopupVisible, setIsPopupVisible] = useState(false);

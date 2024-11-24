@@ -106,7 +106,6 @@ router.post('/finalizePurchase', async (req, res) => {
     
 });
 
-
 /**
  * addToPurchase params
  * type - type of thing we want to add to database. Either highItem, item, or amount
@@ -137,6 +136,9 @@ router.post('/addToPurchase', async (req, res) => {
                 break;
             case "amount":
                 // DO nothing to verify here (maybe change this at some point?)
+                const itemCounterQuery = await db.query("SELECT COUNT(*) FROM active_amounts WHERE order_id = " + orderId)
+                const itemCountInOrder = itemCounterQuery.rows[0].count;
+
                 await db.query("INSERT INTO active_amounts values (" + orderId + ", " + customerId + ", " + item + ");");
                 res.status(200).json({
                     "orderId" : orderId,
@@ -148,16 +150,18 @@ router.post('/addToPurchase', async (req, res) => {
                 return;
         }
         const assertItemExists = await db.query("SELECT * FROM " + verifyingTable + " WHERE name = '" + item + "'");
-        let itemId = -1;
         if (assertItemExists.rowCount == 0) {
             res.status(500).json({"message": "There are no items associated with name = " + item });
             return;
         }
-        itemId = assertItemExists.rows[0].id;
+        const itemId = assertItemExists.rows[0].id;
+        
+        const itemCounterQuery = await db.query("SELECT COUNT(*) FROM " + tableToAddTo + " WHERE order_id = " + orderId)
+        const itemCountInOrder = itemCounterQuery.rows[0].count;
 
         // Maybe unsafe?
-        console.log("INSERT INTO " + tableToAddTo + " values (" + orderId + ", " + customerId + ", " + itemId + ");");
-        await db.query("INSERT INTO " + tableToAddTo + " values (" + orderId + ", " + customerId + ", " + itemId + ");");
+        console.log("INSERT INTO " + tableToAddTo + " values (" + orderId + ", " + customerId + ", " + itemId + ", " + itemCountInOrder + ");");
+        await db.query("INSERT INTO " + tableToAddTo + " values (" + orderId + ", " + customerId + ", " + itemId + ", " + itemCountInOrder + ");");
         res.status(200).json({
             "orderId" : orderId,
             "status" : "successful insertion",
@@ -169,5 +173,146 @@ router.post('/addToPurchase', async (req, res) => {
 
 
 });
+
+router.get('/getOrderDetails/:orderId', async (req, res) => {
+    try {
+    
+        let total = 0;
+        // const orderId = req.params.orderId;
+        // PUT THIS BACK LATER //////////////////////////////////
+        const highLevelItems = [];
+
+        const getOrderId = await db.query("SELECT MAX(orderid) FROM customer_purchase_log;");
+        const orderId = getOrderId.rows[0].max + 1;
+
+        const getFromTableQuery = (table) => "SELECT * FROM " + table + " WHERE order_id = " + orderId + ' ORDER BY item_counter_per_order;';
+        const getActiveItems = await db.query(getFromTableQuery("active_items", "item"));
+        const activeItems = getActiveItems.rows;
+
+        //const active_amounts = await db.query(getFromTableQuery("active_amounts", "amounts"));
+        const getActiveHighLevelItems = await db.query(getFromTableQuery("active_high_level_items", "high_item"));
+        const activeHighLevelItems = getActiveHighLevelItems.rows;
+        let lowLevelPointer = 0;
+
+        const getLowLevelList = await db.query("SELECT * FROM menu ORDER BY id");
+        const lowLevelList = getLowLevelList.rows;
+        const getHighLevelList = await db.query("SELECT * FROM menu_pricing ORDER BY id");
+        const highLevelList = getHighLevelList.rows;
+
+        for (let i = 0; i < getActiveHighLevelItems.rowCount; i++) {
+            // Hard coded bit to determine what type of high level item it is. If we have the time to, we can make a junction table that expects certain items
+            const highItem = activeHighLevelItems[i];
+            const name = highLevelList[highItem.high_item].name;
+            const price = highLevelList[highItem.high_item].price;
+            total += price;
+            // console.log(name + " " + price);
+            const addItemsToArray = (arr, count) => {
+                for (itemIndex = 0; itemIndex < count; itemIndex++) {
+                    let itemId = activeItems[lowLevelPointer].item;
+                    let itemName = lowLevelList[itemId].name;
+                    lowLevelPointer++;
+                    arr.push(itemName);
+                }
+            }
+
+            switch (name) {
+                case "Bowl":
+                    // Expecting a side and an entree
+                    var items = [];
+                    addItemsToArray(items, 2);
+                    var highLevelItem = {
+                        "Name" : name,
+                        "Side 1": items[0],
+                        "Entree 1": items[1],
+                        "Price" : price
+                    };
+                    console.log(highLevelItem);
+                    highLevelItems.push(highLevelItem);
+                    break;
+                case "Plate":
+                    // Expecting a side and two entrees
+                    var items = [];
+                    addItemsToArray(items, 3);
+                    var highLevelItem = {
+                        "Name" : name,
+                        "Side 1": items[0],
+                        "Entree 1": items[1],
+                        "Entree 2": items[2],
+                        "Price" : price
+                    };
+                    console.log(highLevelItem);
+                    highLevelItems.push(highLevelItem);
+                    break;
+                case "Bigger Plate":
+                    // Expecting a side and three entrees
+                    var items = [];
+                    addItemsToArray(items, 4);
+                    var highLevelItem = {
+                        "Name" : name,
+                        "Side 1": items[0],
+                        "Entree 1": items[1],
+                        "Entree 2": items[2],
+                        "Entree 3": items[3],
+                        "Price" : price
+                    };
+                    console.log(highLevelItem);
+                    highLevelItems.push(highLevelItem);
+                    break;
+                case "A La Carte":
+                    // Expecting one entree
+                    var items = [];
+                    addItemsToArray(items, 1);
+                    var highLevelItem = {
+                        "Name" : name,
+                        "Entree 1": items[0],
+                        "Price" : price
+                    };
+                    console.log(highLevelItem);
+                    highLevelItems.push(highLevelItem);
+                    break;
+                case "Appetizer":
+                    // Expecting one appetizer
+                    var items = [];
+                    addItemsToArray(items, 1);
+                    var highLevelItem = {
+                        "Name" : name,
+                        "Appetizer": items[0],
+                        "Price" : price
+                    };
+                    console.log(highLevelItem);
+                    highLevelItems.push(highLevelItem);
+                    break;
+                case "Drink":
+                    // Expecting one drink
+                    var items = [];
+                    addItemsToArray(items, 1);
+                    var highLevelItem = {
+                        "Name" : name,
+                        "Drink": items[0],
+                        "Price" : price
+                    };
+                    console.log(highLevelItem);
+                    highLevelItems.push(highLevelItem);
+                    
+                    break;
+            }
+        }
+
+        const returnVal = {
+            "orderId" : orderId,
+            "highLevelItems" : highLevelItems,
+            "total" : total
+        }
+
+        res.json(returnVal);
+
+    } catch(error) { 
+        console.error("Error retrieving hourly sales data:", error); 
+        res.status(500).json({ message: "An error occurred while fetching this order." }); 
+    } 
+
+
+});
+
 
 module.exports = router;

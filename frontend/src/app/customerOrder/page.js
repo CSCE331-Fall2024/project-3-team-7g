@@ -6,6 +6,11 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
+    const [isAccessible, setIsAccessible] = useState(false);
+    const toggleStyle = () => {
+      setIsAccessible((prev) => !prev);
+    };
+    
     const router = useRouter();
     const [selectedItem, setSelectedItem] = useState(null);
     const [itemType, setItemType] = useState(null);
@@ -101,11 +106,19 @@ export default function Home() {
             <Navbar screen={'Begin Order'}/>
             <main className="flex-grow flex flex-col p-4">
                 <h1 className="px-4 text-2xl font-bold">Sizes</h1>
-                <ButtonList listType="sizes" handleItemClick={handleItemClick}></ButtonList>
+                <ButtonList listType="sizes" handleItemClick={handleItemClick} isAccessible={isAccessible}></ButtonList>
                 <h1 className="px-4 text-2xl font-bold">Appetizers</h1>
-                <ButtonList listType="Appetizer" handleItemClick={handleItemClick}></ButtonList>
+                <ButtonList listType="Appetizer" handleItemClick={handleItemClick} isAccessible={isAccessible}></ButtonList>
                 <h1 className="px-4 text-2xl font-bold">Drinks</h1>
-                <ButtonList listType="Drink" handleItemClick={handleItemClick}></ButtonList>
+                <ButtonList listType="Drink" handleItemClick={handleItemClick} isAccessible={isAccessible}></ButtonList>
+                <button
+                    onClick={toggleStyle}
+                    className="fixed bottom-4 right-4 px-4 py-2 bg-blue-500 text-white rounded-lg shadow-lg font-bold"
+                    
+                >
+                    Visual Aid
+
+                </button>
             </main>
         </div>
     );
