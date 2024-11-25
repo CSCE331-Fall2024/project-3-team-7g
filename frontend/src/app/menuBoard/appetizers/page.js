@@ -17,9 +17,9 @@ export default function Appetizers() {
 
         <h1 className="text-3xl font-bold">Appetizers</h1>
 
-        <ButtonList listType="Appetizer" isAccessible={isAccessible}></ButtonList>
+        <ButtonList listType="Appetizer"></ButtonList>
         <button
-          onClick={toggleStyle}
+          // onClick={toggleStyle}
           className="fixed bottom-4 right-4 px-4 py-2 bg-blue-500 text-white rounded-lg shadow-lg font-bold"
         
         >
