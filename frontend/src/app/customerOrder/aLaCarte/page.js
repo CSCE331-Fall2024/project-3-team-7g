@@ -3,13 +3,14 @@
 import Navbar from "../components/Navbar";
 import ButtonList from "@/app/components/ButtonList";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const ALaCarte = () => {
     const [selectedItems, setSelectedItems] = useState({
-        entrees: []
+        entrees: [],
     });
-    
 
+    const router = useRouter();
     const [popupMessage, setPopupMessage] = useState("");
     const [isPopupVisible, setIsPopupVisible] = useState(false);
 
@@ -46,6 +47,54 @@ const ALaCarte = () => {
         });
     };
 
+    const handleFinalize = async () => {
+        const maxSelections = {
+            entrees: 1,
+        };
+
+        const numEntreesSelected = selectedItems.entrees.length;
+
+        if (numEntreesSelected < maxSelections.entrees) {
+            showPopup(
+                `Need to select an ${numEntreesSelected < maxSelections.entrees ? 'entree' : ''}.`
+            );
+            return;
+        }
+
+        try {
+            for (const entree of selectedItems.entrees) {
+                await addNormalItem("item", entree);
+            }
+
+            router.push(`/customerOrder/completeOrder`);
+        } catch (error) {
+            showPopup("An error occurred while finalizing your items.");
+        }
+    };
+
+    const addNormalItem = async (type, itemName) => {
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PORT}/purchasing/addToPurchase`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    type,
+                    item: itemName,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Server responded with status ${response.status}`);
+            }
+
+            const responseData = await response.json();
+        } catch (error) {
+            showPopup("Error adding item to database.");
+        }
+    }
+
     const showPopup = (message) => {
         setPopupMessage(message);
         setIsPopupVisible(true);
@@ -64,7 +113,12 @@ const ALaCarte = () => {
         <div className="relative flex flex-col min-h-screen bg-white">
             <Navbar screen={"Choose 1 Entree"} />
             <main className="flex-grow flex flex-col p-4">
-                <h1 className="px-4 text-2xl font-bold">Entrees</h1>
+                <div className="flex justify-between mt-4 mr-4">
+                    <h1 className="px-4 text-2xl font-bold">Entrees</h1>
+                    <button onClick={handleFinalize} className="px-6 py-3 text-white font-semibold rounded-lg">
+                        Finalize
+                    </button>
+                </div>
                 <ButtonList
                     listType="entrees"
                     selectedItems={selectedItems.entrees}

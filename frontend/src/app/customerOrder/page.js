@@ -4,6 +4,7 @@ import Navbar from "./components/Navbar";
 import ButtonList from "../components/ButtonList";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Home() {
     const [isAccessible, setIsAccessible] = useState(false);
@@ -41,6 +42,9 @@ export default function Home() {
 
             const responseData = await response.json();
 
+            setSelectedItem(null);
+            setItemType(null);
+
             showPopup(
                 `Added ${itemName} to your cart!`
             );
@@ -56,8 +60,6 @@ export default function Home() {
         } else {
             sentItem = itemName;
         }
-
-        console.log(sentItem);
 
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PORT}/purchasing/addToPurchase`, {
@@ -80,10 +82,8 @@ export default function Home() {
             console.log('Response JSON:', responseData);
 
             if (type == 'Appetizer' || type == 'Drink') {
-                console.log(`type is ${type}`);
                 await addNormalItem("item", itemName);
             } else {
-                console.log(`You are now ordering a ${itemName}, redirecting you to the entree and side screen`);
                 if (itemName == 'A La Carte') {
                     router.push(`/customerOrder/aLaCarte`);
                 } else if (itemName == 'Bowl') {
@@ -123,20 +123,28 @@ export default function Home() {
         <div className="relative flex flex-col min-h-screen bg-white">
             <Navbar screen={'Begin Order'} />
             <main className="flex-grow flex flex-col p-4">
-                <h1 className="px-4 text-2xl font-bold">Sizes</h1>
+                <div className="flex justify-between mt-4 mr-4">
+                    <h1 className="px-4 text-2xl font-bold">Sizes</h1>
+                    <Link href="/customerOrder/completeOrder">
+                        <button className="px-6 py-3 text-white font-semibold rounded-lg">
+                            Finalize Order
+                        </button>
+                    </Link>
+                </div>
                 <ButtonList listType="sizes" handleItemClick={handleItemClick} isAccessible={isAccessible}></ButtonList>
                 <h1 className="px-4 text-2xl font-bold">Appetizers</h1>
                 <ButtonList listType="Appetizer" handleItemClick={handleItemClick} isAccessible={isAccessible}></ButtonList>
                 <h1 className="px-4 text-2xl font-bold">Drinks</h1>
                 <ButtonList listType="Drink" handleItemClick={handleItemClick} isAccessible={isAccessible}></ButtonList>
-                <button
+
+                {/* <button
                     onClick={toggleStyle}
                     className="fixed bottom-4 right-4 px-4 py-2 bg-blue-500 text-white rounded-lg shadow-lg font-bold"
 
                 >
                     Visual Aid
 
-                </button>
+                </button> */}
             </main>
             {isPopupVisible && (
                 <div
