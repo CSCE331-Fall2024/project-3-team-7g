@@ -54,7 +54,7 @@ router.post('/finalizePurchase', async (req, res) => {
         const deleteFromTable = table => "DELETE FROM " + table + " WHERE order_id = " + orderId + ';';
 
         const active_items = await db.query(getFromTableQuery("active_items", "item"));
-        const active_amounts = await db.query(getFromTableQuery("active_amounts", "amounts"));
+        //const active_amounts = await db.query(getFromTableQuery("active_amounts", "amounts"));
         const active_high_level_items = await db.query(getFromTableQuery("active_high_level_items", "high_item"));
 
 
@@ -62,8 +62,7 @@ router.post('/finalizePurchase', async (req, res) => {
             res.status(500).json({message: "cashOrCard must be Cash or Card"});
             return;
         }
-        else if (active_high_level_items.rowCount == 0 || active_items.rowCount == 0 ||
-            active_items.rowCount != active_amounts.rowCount) {
+        else if (active_high_level_items.rowCount == 0 || active_items.rowCount == 0) {
                 res.status(500).json({message: "You either have no items for this given orderId or the database does not have accurate counts"});
                 return;
             }
@@ -79,7 +78,7 @@ router.post('/finalizePurchase', async (req, res) => {
                     const active_ingredients = await db.query(getIngredientsOfItemQuery);
                     
                     for (let j = 0; j < active_ingredients.rowCount; j++) {
-                        const updateInventoryComm = "UPDATE inventory SET AMOUNT = AMOUNT - " + active_amounts.rows[i].amounts + " WHERE id = " +active_ingredients.rows[j].ingredient_id + ";";
+                        const updateInventoryComm = "UPDATE inventory SET AMOUNT = AMOUNT - 1 WHERE id = " +active_ingredients.rows[j].ingredient_id + ";";
                         await db.query(updateInventoryComm);
                     }
                 }
@@ -92,10 +91,11 @@ router.post('/finalizePurchase', async (req, res) => {
                 const currentTime = getCurrentDateTime();
                 console.log("INSERT INTO customer_purchase_log VALUES (" + orderId + ", " + customerId + ", " + total + ", '" + currentTime + "', '"  + cashOrCard + "');");
                 await db.query("INSERT INTO customer_purchase_log VALUES (" + orderId + ", " + customerId + ", " + total + ", '" + currentTime + "', '"  + cashOrCard + "');");
+                await db.query("DELETE FROM active_orders where user_id =" + customerId);
             }
             // Clear from active purcahse
             await db.query(deleteFromTable("active_items"));
-            await db.query(deleteFromTable("active_amounts"));
+            //await db.query(deleteFromTable("active_amounts"));
             await db.query(deleteFromTable("active_high_level_items"));
         }
 
@@ -161,8 +161,8 @@ router.post('/addToPurchase', async (req, res) => {
                 break;
             case "amount":
                 // DO nothing to verify here (maybe change this at some point?)
-                const itemCounterQuery = await db.query("SELECT COUNT(*) FROM active_amounts WHERE order_id = " + orderId)
-                const itemCountInOrder = itemCounterQuery.rows[0].count;
+                // const itemCounterQuery = await db.query("SELECT COUNT(*) FROM active_amounts WHERE order_id = " + orderId)
+                // const itemCountInOrder = itemCounterQuery.rows[0].count;
 
                 await db.query("INSERT INTO active_amounts values (" + orderId + ", " + customerId + ", " + item + ");");
                 res.status(200).json({
