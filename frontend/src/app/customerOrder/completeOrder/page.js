@@ -80,12 +80,12 @@ const CompleteOrder = () => {
         <div className="relative flex flex-col min-h-screen bg-white">
             <Navbar screen={"Current Order"} />
             <main className="flex-grow flex flex-col px-8 py-4">
-                <h1 className="text-2xl font-bold mb-4">Order Details</h1>
+                <h1 className="text-2xl font-bold mb-4">Hi, {localStorage.getItem("userName")}</h1>
 
                 {orderDetails ? (
                     <div className="space-y-4">
                         <div>
-                            <p className="text-lg font-semibold">Order ID: {orderDetails.orderId}</p>
+                            <p className="text-lg font-semibold">Order Details</p>
                             <p className="text-lg font-semibold">Total: ${orderDetails.total.toFixed(2)}</p>
                         </div>
 
