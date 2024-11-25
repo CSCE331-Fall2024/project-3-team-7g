@@ -34,7 +34,6 @@ const CompleteOrder = () => {
             const data = await response.json();
             setOrderDetails(data);
         } catch (error) {
-            console.error(error);
             showPopup("Error fetching order details. Please try again.");
         }
     };
@@ -52,7 +51,7 @@ const CompleteOrder = () => {
     };
 
     const handlePaymentOption = (option) => {
-        closeModal(); // Close modal after selection
+        closeModal();
         alert(`You selected ${option}!`);
     };
 

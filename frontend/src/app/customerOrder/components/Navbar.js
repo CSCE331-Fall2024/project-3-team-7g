@@ -8,9 +8,6 @@ function Navbar({ screen }) {
                 <li>
                     <Link href="/" className="navbarLinks">Home</Link>
                 </li>
-                <li>
-                    <Link href="/" className="navbarLinks">View Cart</Link>
-                </li>
             </ul>
         </nav>
     );

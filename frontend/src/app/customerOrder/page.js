@@ -123,7 +123,14 @@ export default function Home() {
         <div className="relative flex flex-col min-h-screen bg-white">
             <Navbar screen={'Begin Order'} />
             <main className="flex-grow flex flex-col p-4">
-                <h1 className="px-4 text-2xl font-bold">Sizes</h1>
+                <div className="flex justify-between mt-4 mr-4">
+                    <h1 className="px-4 text-2xl font-bold">Sizes</h1>
+                    <Link href="/customerOrder/completeOrder">
+                        <button className="px-6 py-3 text-white font-semibold rounded-lg">
+                            Finalize Order
+                        </button>
+                    </Link>
+                </div>
                 <ButtonList listType="sizes" handleItemClick={handleItemClick} isAccessible={isAccessible}></ButtonList>
                 <h1 className="px-4 text-2xl font-bold">Appetizers</h1>
                 <ButtonList listType="Appetizer" handleItemClick={handleItemClick} isAccessible={isAccessible}></ButtonList>
@@ -138,13 +145,6 @@ export default function Home() {
                     Visual Aid
 
                 </button> */}
-                <div className="flex justify-end mt-4 mr-4">
-                    <Link href="/customerOrder/completeOrder">
-                        <button className="px-6 py-3 text-white font-semibold rounded-lg">
-                            Finalize Order
-                        </button>
-                    </Link>
-                </div>
             </main>
             {isPopupVisible && (
                 <div

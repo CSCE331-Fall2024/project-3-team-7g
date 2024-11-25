@@ -54,26 +54,26 @@ const Plate = () => {
             entrees: 2,
             sides: 1,
         };
-    
+
         const numEntreesSelected = selectedItems.entrees.length;
         const numSidesSelected = selectedItems.sides.length;
-    
+
         if (numEntreesSelected < maxSelections.entrees || numSidesSelected < maxSelections.sides) {
             showPopup(
                 `Need to select more ${numEntreesSelected < maxSelections.entrees ? 'entrees' : ''}${numSidesSelected < maxSelections.sides ? ' and a side' : ''}.`
             );
             return;
         }
-        
+
         try {
             for (const side of selectedItems.sides) {
                 await addNormalItem("item", side);
             }
-    
+
             for (const entree of selectedItems.entrees) {
                 await addNormalItem("item", entree);
             }
-            
+
             router.push(`/customerOrder/completeOrder`);
         } catch (error) {
             showPopup("An error occurred while finalizing your items.");
@@ -121,8 +121,12 @@ const Plate = () => {
         <div className="relative flex flex-col min-h-screen bg-white">
             <Navbar screen={"Choose 1 Side and 2 Entrees"} />
             <main className="flex-grow flex flex-col p-4">
-                <h1 className="px-4 text-2xl font-bold">Sides</h1>
-                {/* <p className="px-4 text-sm text-gray-600">Choose a Side, or Get Half and Half</p> */}
+                <div className="flex justify-between mt-4 mr-4">
+                    <h1 className="px-4 text-2xl font-bold">Sides</h1>
+                    <button onClick={handleFinalize} className="px-6 py-3 text-white font-semibold rounded-lg">
+                        Finalize
+                    </button>
+                </div>
                 <ButtonList
                     listType="sides"
                     selectedItems={selectedItems.sides}
@@ -134,11 +138,6 @@ const Plate = () => {
                     selectedItems={selectedItems.entrees}
                     handleItemClick={handleItemClick}
                 />
-                <div className="flex justify-end mt-4 mr-4">
-                    <button onClick={handleFinalize} className="px-6 py-3 text-white font-semibold rounded-lg">
-                        Finalize
-                    </button>
-                </div>
             </main>
 
             {isPopupVisible && (
