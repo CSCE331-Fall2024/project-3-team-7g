@@ -3,12 +3,14 @@
 import Navbar from "../components/Navbar";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const CompleteOrder = () => {
     const [popupMessage, setPopupMessage] = useState("");
     const [isPopupVisible, setIsPopupVisible] = useState(false);
     const [orderDetails, setOrderDetails] = useState(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const router = useRouter();
 
     const showPopup = (message) => {
         setPopupMessage(message);
@@ -17,11 +19,6 @@ const CompleteOrder = () => {
         setTimeout(() => {
             setIsPopupVisible(false);
         }, 3000);
-    };
-
-    const hidePopup = () => {
-        setPopupMessage("");
-        setIsPopupVisible(false);
     };
 
     const getOrderDetails = async () => {
@@ -50,9 +47,33 @@ const CompleteOrder = () => {
         setIsModalVisible(false); 
     };
 
-    const handlePaymentOption = (option) => {
+    const handlePaymentOption = async (option) => {
         closeModal();
-        alert(`You selected ${option}!`);
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PORT}/purchasing/finalizePurchase`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userEmail: localStorage.getItem("userEmail"),
+                    isActuallyOrdering: true,
+                    cashOrCard: option
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Server responded with status ${response.status}`);
+            }
+
+            localStorage.removeItem("userEmail");
+            localStorage.removeItem("userName");
+            router.push("../");
+            
+            const responseData = await response.json();
+        } catch (error) {
+            console.log("Error finalizing order");
+        }
     };
 
     return (
@@ -106,7 +127,6 @@ const CompleteOrder = () => {
                 </div>
             </main>
 
-            {/* Popup */}
             {isPopupVisible && (
                 <div
                     style={{
