@@ -16,7 +16,7 @@ const Plate = () => {
     const handleItemClick = (listType, item) => {
         const maxSelections = {
             entrees: 2,
-            sides: 2,
+            sides: 1,
         };
 
         setSelectedItems((prev) => {
@@ -47,6 +47,51 @@ const Plate = () => {
         });
     };
 
+    const handleFinalize = () => {
+        const maxSelections = {
+            entrees: 2,
+            sides: 1,
+        };
+    
+        const numEntreesSelected = selectedItems.entrees.length;
+        const numSidesSelected = selectedItems.sides.length;
+    
+        if (numEntreesSelected < maxSelections.entrees || numSidesSelected < maxSelections.sides) {
+            showPopup(
+                `Need to select more ${numEntreesSelected < maxSelections.entrees ? 'entrees' : ''} ${numSidesSelected < maxSelections.sides ? ' and sides' : ''}.`
+            );
+            return;
+        }
+        
+        // add to normal item but sides first
+        console.log("All selections are complete. Finalizing...");
+    };
+
+    const addNormalItem = async (type, itemName) => {
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PORT}/purchasing/addToPurchase`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    type,
+                    item: itemName,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Server responded with status ${response.status}`);
+            }
+
+            const responseData = await response.json();
+
+            console.log('Response JSON:', responseData);
+        } catch (error) {
+            console.log("Error adding item to database")
+        }
+    }
+
     const showPopup = (message) => {
         setPopupMessage(message);
         setIsPopupVisible(true);
@@ -66,7 +111,7 @@ const Plate = () => {
             <Navbar screen={"Choose 1 Side and 2 Entrees"} />
             <main className="flex-grow flex flex-col p-4">
                 <h1 className="px-4 text-2xl font-bold">Sides</h1>
-                <p className="px-4 text-sm text-gray-600">Choose a Side, or Get Half and Half</p>
+                {/* <p className="px-4 text-sm text-gray-600">Choose a Side, or Get Half and Half</p> */}
                 <ButtonList
                     listType="sides"
                     selectedItems={selectedItems.sides}
@@ -78,6 +123,11 @@ const Plate = () => {
                     selectedItems={selectedItems.entrees}
                     handleItemClick={handleItemClick}
                 />
+                <div className="flex justify-end mt-4 mr-4">
+                    <button onClick={handleFinalize} className="px-6 py-3 text-white font-semibold rounded-lg">
+                        Finalize
+                    </button>
+                </div>
             </main>
 
             {isPopupVisible && (

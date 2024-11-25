@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useState } from 'react';
 
-const OptionButton = ({ OptionName, image, handleItemSelection, isSelected, isAccessible}) => {
+const OptionButton = ({ OptionName, image, handleItemSelection, isSelected, listType, isAccessible}) => {
 
     const [imgSrc, setImgSrc] = useState(`/${image}`);
     const [isFallback, setIsFallback] = useState(false);

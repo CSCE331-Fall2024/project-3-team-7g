@@ -1,6 +1,6 @@
 "use client";
 
-import Navbar from "../menuBoard/components/Navbar";
+import Navbar from "./components/Navbar";
 import ButtonList from "../components/ButtonList";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -8,12 +8,14 @@ import { useRouter } from "next/navigation";
 export default function Home() {
     const [isAccessible, setIsAccessible] = useState(false);
     const toggleStyle = () => {
-      setIsAccessible((prev) => !prev);
+        setIsAccessible((prev) => !prev);
     };
-    
+
     const router = useRouter();
     const [selectedItem, setSelectedItem] = useState(null);
     const [itemType, setItemType] = useState(null);
+    const [popupMessage, setPopupMessage] = useState("");
+    const [isPopupVisible, setIsPopupVisible] = useState(false);
 
     const handleItemClick = (itemType, item) => {
         setItemType(itemType);
@@ -36,10 +38,12 @@ export default function Home() {
             if (!response.ok) {
                 throw new Error(`Server responded with status ${response.status}`);
             }
-    
+
             const responseData = await response.json();
-    
-            console.log('Response JSON:', responseData);
+
+            showPopup(
+                `Added ${itemName} to your cart!`
+            );
         } catch (error) {
             console.log("Error adding item to database")
         }
@@ -70,11 +74,11 @@ export default function Home() {
             if (!response.ok) {
                 throw new Error(`Server responded with status ${response.status}`);
             }
-    
+
             const responseData = await response.json();
-    
+
             console.log('Response JSON:', responseData);
-            
+
             if (type == 'Appetizer' || type == 'Drink') {
                 console.log(`type is ${type}`);
                 await addNormalItem("item", itemName);
@@ -101,9 +105,23 @@ export default function Home() {
         }
     }, [selectedItem]);
 
+    const showPopup = (message) => {
+        setPopupMessage(message);
+        setIsPopupVisible(true);
+
+        setTimeout(() => {
+            setIsPopupVisible(false);
+        }, 3000);
+    };
+
+    const hidePopup = () => {
+        setPopupMessage("");
+        setIsPopupVisible(false);
+    };
+
     return (
         <div className="relative flex flex-col min-h-screen bg-white">
-            <Navbar screen={'Begin Order'}/>
+            <Navbar screen={'Begin Order'} />
             <main className="flex-grow flex flex-col p-4">
                 <h1 className="px-4 text-2xl font-bold">Sizes</h1>
                 <ButtonList listType="sizes" handleItemClick={handleItemClick} isAccessible={isAccessible}></ButtonList>
@@ -114,12 +132,33 @@ export default function Home() {
                 <button
                     onClick={toggleStyle}
                     className="fixed bottom-4 right-4 px-4 py-2 bg-blue-500 text-white rounded-lg shadow-lg font-bold"
-                    
+
                 >
                     Visual Aid
 
                 </button>
             </main>
+            {isPopupVisible && (
+                <div
+                    style={{
+                        position: "fixed",
+                        top: "20px",
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        padding: "16px",
+                        backgroundColor: "#DFF2BF",
+                        color: "#4BB543",
+                        borderRadius: "8px",
+                        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                        zIndex: 1000,
+                        textAlign: "center",
+                        width: "90%",
+                        maxWidth: "400px",
+                    }}
+                >
+                    {popupMessage}
+                </div>
+            )}
         </div>
     );
 }
