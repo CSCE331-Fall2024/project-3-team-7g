@@ -11,9 +11,6 @@ function Navbar({ screen }) {
                 <li>
                     <Link href="/" className="navbarLinks">View Cart</Link>
                 </li>
-                <li>
-                    <Link href="/" className="navbarLinks">Complete Order</Link>
-                </li>
             </ul>
         </nav>
     );

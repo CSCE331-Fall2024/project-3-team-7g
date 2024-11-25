@@ -3,6 +3,7 @@
 import Navbar from "../components/Navbar";
 import ButtonList from "@/app/components/ButtonList";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const Plate = () => {
     const [selectedItems, setSelectedItems] = useState({
@@ -10,6 +11,7 @@ const Plate = () => {
         entrees: [],
     });
 
+    const router = useRouter();
     const [popupMessage, setPopupMessage] = useState("");
     const [isPopupVisible, setIsPopupVisible] = useState(false);
 
@@ -47,7 +49,7 @@ const Plate = () => {
         });
     };
 
-    const handleFinalize = () => {
+    const handleFinalize = async () => {
         const maxSelections = {
             entrees: 2,
             sides: 1,
@@ -58,13 +60,24 @@ const Plate = () => {
     
         if (numEntreesSelected < maxSelections.entrees || numSidesSelected < maxSelections.sides) {
             showPopup(
-                `Need to select more ${numEntreesSelected < maxSelections.entrees ? 'entrees' : ''} ${numSidesSelected < maxSelections.sides ? ' and sides' : ''}.`
+                `Need to select more ${numEntreesSelected < maxSelections.entrees ? 'entrees' : ''}${numSidesSelected < maxSelections.sides ? ' and a side' : ''}.`
             );
             return;
         }
         
-        // add to normal item but sides first
-        console.log("All selections are complete. Finalizing...");
+        try {
+            for (const side of selectedItems.sides) {
+                await addNormalItem("item", side);
+            }
+    
+            for (const entree of selectedItems.entrees) {
+                await addNormalItem("item", entree);
+            }
+            
+            router.push(`/customerOrder/completeOrder`);
+        } catch (error) {
+            showPopup("An error occurred while finalizing your items.");
+        }
     };
 
     const addNormalItem = async (type, itemName) => {
@@ -85,10 +98,8 @@ const Plate = () => {
             }
 
             const responseData = await response.json();
-
-            console.log('Response JSON:', responseData);
         } catch (error) {
-            console.log("Error adding item to database")
+            showPopup("Error adding item to database.");
         }
     }
 
