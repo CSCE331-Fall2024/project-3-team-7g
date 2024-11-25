@@ -59,11 +59,9 @@ export default function ProductUsage() {
             {["startYear", "startMonth", "startDay", "startHour", "endYear", "endMonth", "endDay", "endHour"].map((field) => (
               <div key={field} className="flex flex-col">
                 <label htmlFor={field}>
-                  {field
-                    .replace(/([A-Z])/g, ' $1') 
-                    .replace(/\b\w/g, (char) => char.toUpperCase()) 
-                    .toLowerCase()} 
+                  {field.replace(/([A-Z])/g, ' $1').replace(/\b\w/g, (char) => char.toUpperCase())}
                 </label>
+
 
                 <input
                   type="text"
