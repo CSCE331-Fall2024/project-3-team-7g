@@ -122,7 +122,6 @@ router.post('/addToPurchase', async (req, res) => {
         const orderId = getOrderId.rows[0].max + 1;
         const customerId = 2026;
 
-
         let verifyingTable = "";
         let tableToAddTo = "";
 

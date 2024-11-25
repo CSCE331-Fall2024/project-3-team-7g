@@ -34,9 +34,9 @@ const dotenv = require('dotenv').config();
         sizes: sets[4]
     };
 
-    const ButtonList = ({ listType, handleItemClick, isAccessible}) => {
+    const ButtonList = ({ listType, handleItemClick, selectedItems, isAccessible}) => {
         const buttons = buttonSets[listType] || [];
-
+    
         return (
             <div
                 style={{
@@ -46,19 +46,28 @@ const dotenv = require('dotenv').config();
                     padding: '16px',
                 }}
             >
-
-                {buttons.map((button, index) => (
-                    <OptionButton 
-                        key={index} 
-                        OptionName={button.OptionName} 
-                        listType={listType}
-                        image={button.image}
-                        handleItemSelection={handleItemClick}
-                        isAccessible = {isAccessible}
-                    />
-                ))}
+                {buttons.map((button, index) => {
+                    let isSelected;
+                    if (selectedItems != null) {
+                        isSelected = selectedItems.includes(button.OptionName);
+                    } else {
+                        isSelected = false;
+                    }
+                    
+                    return (
+                        <OptionButton
+                            key={index}
+                            OptionName={button.OptionName}
+                            listType={listType}
+                            image={button.image}
+                            handleItemSelection={handleItemClick}
+                            isSelected={isSelected}
+                            isAccessible = {isAccessible}
+                        />
+                    );
+                })}
             </div>
         );
-    }
+    };
     
     export default ButtonList;
