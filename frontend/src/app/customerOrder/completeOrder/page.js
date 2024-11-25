@@ -26,7 +26,7 @@ const CompleteOrder = () => {
 
     const getOrderDetails = async () => {
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PORT}/purchasing/getOrderDetails/123456789`);
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PORT}/purchasing/getOrderDetails/${localStorage.getItem("userEmail")}`);
             if (!response.ok) {
                 throw new Error("Failed to fetch order details");
             }

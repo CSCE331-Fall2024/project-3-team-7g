@@ -44,10 +44,35 @@ export default function Home() {
 
         setIsLoading(true);
 
+        handleLogin (userObject.email, userObject.name);
+
         setTimeout(() => {
             router.push("/customerOrder");
         }, 500);
     }
+
+    const handleLogin = async (userEmail, userName) => {
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PORT}/user/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userEmail,
+                    userName
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Server responded with status ${response.status}`);
+            }
+
+            const responseData = await response.json();
+        } catch (error) {
+            console.log("Error logging in")
+        }
+    };
 
     function parseJwt(token) {
         const base64Url = token.split(".")[1];

@@ -31,8 +31,9 @@ export default function Home() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
+                    userEmail: localStorage.getItem("userEmail"),
                     type,
-                    item: itemName,
+                    item: itemName
                 }),
             });
 
@@ -68,8 +69,9 @@ export default function Home() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
+                    userEmail: localStorage.getItem("userEmail"),
                     type: "highItem",
-                    item: sentItem,
+                    item: sentItem
                 }),
             });
 
@@ -78,8 +80,6 @@ export default function Home() {
             }
 
             const responseData = await response.json();
-
-            console.log('Response JSON:', responseData);
 
             if (type == 'Appetizer' || type == 'Drink') {
                 await addNormalItem("item", itemName);

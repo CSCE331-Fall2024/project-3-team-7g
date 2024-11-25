@@ -88,8 +88,9 @@ const Plate = () => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
+                    userEmail: localStorage.getItem("userEmail"),
                     type,
-                    item: itemName,
+                    item: itemName
                 }),
             });
 
