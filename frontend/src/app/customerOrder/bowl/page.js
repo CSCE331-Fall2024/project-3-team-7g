@@ -3,6 +3,7 @@
 import Navbar from "../components/Navbar";
 import ButtonList from "@/app/components/ButtonList";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const Bowl = () => {
     const [selectedItems, setSelectedItems] = useState({
@@ -10,13 +11,14 @@ const Bowl = () => {
         entrees: [],
     });
 
+    const router = useRouter();
     const [popupMessage, setPopupMessage] = useState("");
     const [isPopupVisible, setIsPopupVisible] = useState(false);
 
     const handleItemClick = (listType, item) => {
         const maxSelections = {
             entrees: 1,
-            sides: 2,
+            sides: 1,
         };
 
         setSelectedItems((prev) => {
@@ -47,6 +49,61 @@ const Bowl = () => {
         });
     };
 
+    const handleFinalize = async () => {
+        const maxSelections = {
+            entrees: 1,
+            sides: 1,
+        };
+
+        const numEntreesSelected = selectedItems.entrees.length;
+        const numSidesSelected = selectedItems.sides.length;
+
+        if (numEntreesSelected < maxSelections.entrees || numSidesSelected < maxSelections.sides) {
+            showPopup(
+                `Need to select an ${numEntreesSelected < maxSelections.entrees ? 'entree' : ''}${numSidesSelected < maxSelections.sides ? ' and a side' : ''}.`
+            );
+            return;
+        }
+
+        try {
+            for (const side of selectedItems.sides) {
+                await addNormalItem("item", side);
+            }
+
+            for (const entree of selectedItems.entrees) {
+                await addNormalItem("item", entree);
+            }
+
+            router.push(`/customerOrder/completeOrder`);
+        } catch (error) {
+            showPopup("An error occurred while finalizing your items.");
+        }
+    };
+
+    const addNormalItem = async (type, itemName) => {
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PORT}/purchasing/addToPurchase`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userEmail: localStorage.getItem("userEmail"),
+                    type,
+                    item: itemName
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Server responded with status ${response.status}`);
+            }
+
+            const responseData = await response.json();
+        } catch (error) {
+            showPopup("Error adding item to database.");
+        }
+    }
+
     const showPopup = (message) => {
         setPopupMessage(message);
         setIsPopupVisible(true);
@@ -65,8 +122,12 @@ const Bowl = () => {
         <div className="relative flex flex-col min-h-screen bg-white">
             <Navbar screen={"Choose 1 Side and 1 Entree"} />
             <main className="flex-grow flex flex-col p-4">
-                <h1 className="px-4 text-2xl font-bold">Sides</h1>
-                <p className="px-4 text-sm text-gray-600">Choose a Side, or Get Half and Half</p>
+                <div className="flex justify-between mt-4 mr-4">
+                    <h1 className="px-4 text-2xl font-bold">Sides</h1>
+                    <button onClick={handleFinalize} className="px-6 py-3 text-white font-semibold rounded-lg">
+                        Finalize
+                    </button>
+                </div>
                 <ButtonList
                     listType="sides"
                     selectedItems={selectedItems.sides}

@@ -97,6 +97,31 @@ router.post('/updateMenuPricing', async (req, res) => {
     }
 });
 
+router.post('/changeClassification', async (req, res) => {
+    const { user_id, classification } = req.body;
+
+    // Validation
+    if (!user_id || !classification) {
+        return res.status(400).json({ message: "user_id and classification are required." });
+    }
+
+    try {
+        // Directly update and check result
+        const updateQuery = 'UPDATE users SET classification = $1 WHERE user_id = $2';
+        const updateResult = await db.query(updateQuery, [classification, user_id]);
+
+        if (updateResult.rowCount > 0) {
+            res.json({ message: `Classification updated successfully for user_ID ${user_id}` });
+        } else {
+            res.status(404).json({ message: `User with user_ID ${user_id} not found.` });
+        }
+    } catch (err) {
+        console.error("Error updating classification:", err);
+        res.status(500).json({ message: "Internal server error." });
+    }
+});
+
+
 
 router.get('/getMenuItems', async (req, res) => {
     try {
@@ -127,6 +152,17 @@ router.get('/getItemInventory', async (req, res) => {
         res.status(500).json({ message: "Error retrieving inventory." });
     }
 });
+
+router.get('/getUsers', async (req, res) => {
+    try {
+        const result = await db.query("SELECT user_id, name, email, classification FROM users"); // Add the table name here
+        res.json(result.rows); // Return rows to the client
+    } catch (error) {
+        console.error("Error fetching users", error);
+        res.status(500).json({ message: "Error retrieving users." });
+    }
+});
+
 
 router.post('/getUsageData', async (req, res) => {
     try {
@@ -174,28 +210,47 @@ router.post('/getUsageData', async (req, res) => {
     }
 });
 
-router.get('/getWeeklySales/:year/:month/:day', async (req, res) => {
-    const { year, month, day } = req.params;
-
+router.post('/getWeeklySales', async (req, res) => {
     try {
-        const firstDay = new Date(year, month - 1, day, 9, 0, 0);
+        const { year, month, day } = req.body;
 
-        const lastDay = new Date(firstDay);
-        lastDay.setDate(firstDay.getDate() + 6);
-        lastDay.setHours(21, 0, 0);
+        if (!year || !month || !day) {
+            return res.status(400).json({ message: "Year, month, and day are required." });
+        }
 
-        const firstDayStr = firstDay.toISOString();
-        const lastDayStr = lastDay.toISOString();
+        // Parse input values
+        const startYear = parseInt(year);
+        const startMonth = parseInt(month) - 1; // Adjust for 0-based month indexing
+        const startDay = parseInt(day);
 
-        console.log(`Date range: ${firstDayStr} to ${lastDayStr}`);
+        if (
+            isNaN(startYear) || isNaN(startMonth) || isNaN(startDay) ||
+            startMonth < 0 || startMonth > 11 || startDay < 1 || startDay > 31
+        ) {
+            return res.status(400).json({ message: "Invalid date values provided." });
+        }
 
+        // Calculate the starting and ending timestamps
+        const startDate = new Date(startYear, startMonth, startDay, 9, 0, 0); // Start at 9 AM
+        const endDate = new Date(startDate);
+        endDate.setDate(startDate.getDate() + 6); // Add 6 days for the week
+        endDate.setHours(21); // End at 9 PM
+
+        const startTimestamp = startDate.toISOString();
+        const endTimestamp = endDate.toISOString();
+
+        // Debugging range (optional, can be removed in production)
+        console.log(`Start: ${startTimestamp}, End: ${endTimestamp}`);
+
+        // Query the database for customer purchases within the date range
         const query = `
-            SELECT customerid, orderid, timeofpurchase, totalcost 
-            FROM customer_purchase_log 
-            WHERE timeofpurchase::DATE BETWEEN $1::DATE AND $2::DATE
+            SELECT customerid, orderid, timeofpurchase, totalcost
+            FROM customer_purchase_log
+            WHERE timeofpurchase BETWEEN $1 AND $2
         `;
-        const result = await db.query(query, [firstDayStr, lastDayStr]);
+        const result = await db.query(query, [startTimestamp, endTimestamp]);
 
+        // Map result rows to a simplified structure
         const purchases = result.rows.map(row => ({
             customerId: row.customerid,
             orderId: row.orderid,
@@ -205,10 +260,11 @@ router.get('/getWeeklySales/:year/:month/:day', async (req, res) => {
 
         res.json(purchases);
     } catch (error) {
-        console.error("Error retrieving weekly sales data:", error);
-        res.status(500).json({ message: "An error occurred while fetching sales data." });
+        console.error("Error fetching weekly sales data:", error);
+        res.status(500).json({ message: "Internal server error." });
     }
 });
+
 
 router.get('/getHourlySales/:year/:month/:day', async (req, res) => {
     const { year, month, day } = req.params;

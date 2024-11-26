@@ -34,13 +34,19 @@ router.post('/finalizePurchase', async (req, res) => {
 
         // const { orderId, customerId, cashOrCard, isActuallyOrdering } = req.body;
         // Put back once we implement this
-        const {cashOrCard, isActuallyOrdering} = req.body;
-        const getOrderId = await db.query("SELECT MAX(orderid) FROM customer_purchase_log;");
-        const orderId = getOrderId.rows[0].max + 1;
-        const customerId = 2026;
+        const {userEmail, cashOrCard, isActuallyOrdering} = req.body;
+        const getCustomerId = await db.query("SELECT * FROM users WHERE email = '" + userEmail + "';");
+        if (getCustomerId.rowCount == 0) {
+            res.status(500).json({message: "User does not exist in database"});
+            return;
+        }
+        const customerId = getCustomerId.rows[0].user_id;
+        const getOrderId = await db.query("SELECT order_id FROM active_orders where user_id = " + customerId);
+        const orderId = getOrderId.rows[0].order_id;
 
         if (orderId == undefined || customerId == undefined || cashOrCard == undefined || isActuallyOrdering == undefined) {
             res.status(500).json({message: "All arguments are not given yet"});
+            return;
         }
 
         
@@ -48,7 +54,7 @@ router.post('/finalizePurchase', async (req, res) => {
         const deleteFromTable = table => "DELETE FROM " + table + " WHERE order_id = " + orderId + ';';
 
         const active_items = await db.query(getFromTableQuery("active_items", "item"));
-        const active_amounts = await db.query(getFromTableQuery("active_amounts", "amounts"));
+        //const active_amounts = await db.query(getFromTableQuery("active_amounts", "amounts"));
         const active_high_level_items = await db.query(getFromTableQuery("active_high_level_items", "high_item"));
 
 
@@ -56,8 +62,7 @@ router.post('/finalizePurchase', async (req, res) => {
             res.status(500).json({message: "cashOrCard must be Cash or Card"});
             return;
         }
-        else if (active_high_level_items.rowCount == 0 || active_items.rowCount == 0 ||
-            active_items.rowCount != active_amounts.rowCount) {
+        else if (active_high_level_items.rowCount == 0 || active_items.rowCount == 0) {
                 res.status(500).json({message: "You either have no items for this given orderId or the database does not have accurate counts"});
                 return;
             }
@@ -73,7 +78,7 @@ router.post('/finalizePurchase', async (req, res) => {
                     const active_ingredients = await db.query(getIngredientsOfItemQuery);
                     
                     for (let j = 0; j < active_ingredients.rowCount; j++) {
-                        const updateInventoryComm = "UPDATE inventory SET AMOUNT = AMOUNT - " + active_amounts.rows[i].amounts + " WHERE id = " +active_ingredients.rows[j].ingredient_id + ";";
+                        const updateInventoryComm = "UPDATE inventory SET AMOUNT = AMOUNT - 1 WHERE id = " +active_ingredients.rows[j].ingredient_id + ";";
                         await db.query(updateInventoryComm);
                     }
                 }
@@ -86,10 +91,11 @@ router.post('/finalizePurchase', async (req, res) => {
                 const currentTime = getCurrentDateTime();
                 console.log("INSERT INTO customer_purchase_log VALUES (" + orderId + ", " + customerId + ", " + total + ", '" + currentTime + "', '"  + cashOrCard + "');");
                 await db.query("INSERT INTO customer_purchase_log VALUES (" + orderId + ", " + customerId + ", " + total + ", '" + currentTime + "', '"  + cashOrCard + "');");
+                await db.query("DELETE FROM active_orders where user_id =" + customerId);
             }
             // Clear from active purcahse
             await db.query(deleteFromTable("active_items"));
-            await db.query(deleteFromTable("active_amounts"));
+            //await db.query(deleteFromTable("active_amounts"));
             await db.query(deleteFromTable("active_high_level_items"));
         }
 
@@ -117,10 +123,29 @@ router.post('/addToPurchase', async (req, res) => {
     try {
         // const {type, orderId, customerId, item} = req.body;
         // Put back once we fully implement it
-        const {type, item} = req.body;
-        const getOrderId = await db.query("SELECT MAX(orderid) FROM customer_purchase_log;");
-        const orderId = getOrderId.rows[0].max + 1;
-        const customerId = 2026;
+        const {userEmail, type, item} = req.body;
+        const getCustomerId = await db.query("SELECT * FROM users WHERE email = '" + userEmail + "';");
+        if (getCustomerId.rowCount == 0) {
+            res.status(500).json({message: "User does not exist in database"});
+            return;
+        }
+        const customerId = getCustomerId.rows[0].user_id;
+        const getOrderId = await db.query("SELECT order_id FROM active_orders where user_id = " + customerId);
+
+        let orderId = -1;
+        if (getOrderId.rowCount == 0) { // User does not have a pending order yet
+            const getCompletedOrderCount = await db.query("SELECT COUNT(*) FROM customer_purchase_log");
+            const completedOrders = getCompletedOrderCount.rows[0].count;
+            const getActiveOrderCount = await db.query("SELECT COUNT(*) FROM active_orders");
+            const activeOrders = getActiveOrderCount.rows[0].count;
+
+            orderId = completedOrders + activeOrders;
+
+            await db.query("INSERT INTO active_orders VALUES (" + orderId + ", " + customerId + ");");
+        }
+        else {
+            orderId = getOrderId.rows[0].order_id;
+        }
 
         let verifyingTable = "";
         let tableToAddTo = "";
@@ -136,8 +161,8 @@ router.post('/addToPurchase', async (req, res) => {
                 break;
             case "amount":
                 // DO nothing to verify here (maybe change this at some point?)
-                const itemCounterQuery = await db.query("SELECT COUNT(*) FROM active_amounts WHERE order_id = " + orderId)
-                const itemCountInOrder = itemCounterQuery.rows[0].count;
+                // const itemCounterQuery = await db.query("SELECT COUNT(*) FROM active_amounts WHERE order_id = " + orderId)
+                // const itemCountInOrder = itemCounterQuery.rows[0].count;
 
                 await db.query("INSERT INTO active_amounts values (" + orderId + ", " + customerId + ", " + item + ");");
                 res.status(200).json({
@@ -163,7 +188,7 @@ router.post('/addToPurchase', async (req, res) => {
         console.log("INSERT INTO " + tableToAddTo + " values (" + orderId + ", " + customerId + ", " + itemId + ", " + itemCountInOrder + ");");
         await db.query("INSERT INTO " + tableToAddTo + " values (" + orderId + ", " + customerId + ", " + itemId + ", " + itemCountInOrder + ");");
         res.status(200).json({
-            "orderId" : orderId,
+            "orderId" : Number(orderId),
             "status" : "successful insertion",
         });
     } catch (error) {
@@ -174,18 +199,17 @@ router.post('/addToPurchase', async (req, res) => {
 
 });
 
-router.get('/getOrderDetails/:orderId', async (req, res) => {
+router.get('/getOrderDetails/:email', async (req, res) => {
     try {
     
         let total = 0;
-        // const orderId = req.params.orderId;
+        const email = req.params.email;
+        const getCustomerId = await db.query("SELECT * FROM users WHERE email = '" + email + "';");
+        const customerId = getCustomerId.rows[0].user_id
         // PUT THIS BACK LATER //////////////////////////////////
         const highLevelItems = [];
 
-        const getOrderId = await db.query("SELECT MAX(orderid) FROM customer_purchase_log;");
-        const orderId = getOrderId.rows[0].max + 1;
-
-        const getFromTableQuery = (table) => "SELECT * FROM " + table + " WHERE order_id = " + orderId + ' ORDER BY item_counter_per_order;';
+        const getFromTableQuery = (table) => "SELECT * FROM " + table + " WHERE customer_id = " + customerId + ' ORDER BY item_counter_per_order;';
         const getActiveItems = await db.query(getFromTableQuery("active_items", "item"));
         const activeItems = getActiveItems.rows;
 
@@ -299,7 +323,7 @@ router.get('/getOrderDetails/:orderId', async (req, res) => {
         }
 
         const returnVal = {
-            "orderId" : orderId,
+            "customerId" : Number(customerId),
             "highLevelItems" : highLevelItems,
             "total" : total
         }
