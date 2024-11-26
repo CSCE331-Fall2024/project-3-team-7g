@@ -78,6 +78,8 @@ router.post('/finalizePurchase', async (req, res) => {
                     const getIngredientsOfItemQuery = "SELECT * FROM menu_to_ingredients where menu_id = " + active_items.rows[i].item + ";";
                     const active_ingredients = await db.query(getIngredientsOfItemQuery);
                     
+                    await db.query("INSERT INTO menu_sales values (" + active_items.rows[i].item + ", 1, '" + getCurrentDateTime() + "');");
+
                     for (let j = 0; j < active_ingredients.rowCount; j++) {
                         const updateInventoryComm = "UPDATE inventory SET AMOUNT = AMOUNT - " + active_amounts.rows[i].amounts + " WHERE id = " +active_ingredients.rows[j].ingredient_id + ";";
                         await db.query(updateInventoryComm);
