@@ -14,6 +14,8 @@ const updateMenuPricing = require('./routes/Manager')
 const getMenuPrices = require('./routes/Manager')
 const getItemInventory = require('./routes/Manager')
 const getUsageData = require('./routes/Manager')
+const getUsers = require('./routes/Manager')
+const changeClassification = require('./routes/Manager')
 
 const app = express();
 app.use(cors())
@@ -34,6 +36,8 @@ app.use('/purchasing', completePurchase)
 app.use('/Manager', getMenuPrices)
 app.use('/Manager', getItemInventory)
 app.use('/Manager', getUsageData)
+app.use('/Manager', getUsers)
+app.use('/Manager', changeClassification)
 
 
 // Add process hook to shutdown pool

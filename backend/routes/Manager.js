@@ -97,6 +97,31 @@ router.post('/updateMenuPricing', async (req, res) => {
     }
 });
 
+router.post('/changeClassification', async (req, res) => {
+    const { user_id, classification } = req.body;
+
+    // Validation
+    if (!user_id || !classification) {
+        return res.status(400).json({ message: "user_id and classification are required." });
+    }
+
+    try {
+        // Directly update and check result
+        const updateQuery = 'UPDATE users SET classification = $1 WHERE user_id = $2';
+        const updateResult = await db.query(updateQuery, [classification, user_id]);
+
+        if (updateResult.rowCount > 0) {
+            res.json({ message: `Classification updated successfully for user_ID ${user_id}` });
+        } else {
+            res.status(404).json({ message: `User with user_ID ${user_id} not found.` });
+        }
+    } catch (err) {
+        console.error("Error updating classification:", err);
+        res.status(500).json({ message: "Internal server error." });
+    }
+});
+
+
 
 router.get('/getMenuItems', async (req, res) => {
     try {
@@ -127,6 +152,17 @@ router.get('/getItemInventory', async (req, res) => {
         res.status(500).json({ message: "Error retrieving inventory." });
     }
 });
+
+router.get('/getUsers', async (req, res) => {
+    try {
+        const result = await db.query("SELECT user_id, name, email, classification FROM users"); // Add the table name here
+        res.json(result.rows); // Return rows to the client
+    } catch (error) {
+        console.error("Error fetching users", error);
+        res.status(500).json({ message: "Error retrieving users." });
+    }
+});
+
 
 router.post('/getUsageData', async (req, res) => {
     try {
