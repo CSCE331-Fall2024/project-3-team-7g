@@ -17,7 +17,7 @@ const getUsageData = require('./routes/Manager')
 const getUsers = require('./routes/Manager')
 const changeClassification = require('./routes/Manager')
 
-const manager = require('./routes/manager')
+const manager = require('./routes/Manager')
 const purchasing = require('./routes/purchasing')
 const user = require('./routes/user')
 const app = express();
