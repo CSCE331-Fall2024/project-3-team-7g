@@ -8,12 +8,6 @@ const Navbar = () => {
           <Link href="/" className="navbarLinks">Home</Link>
         </li>
       </ul>
-      <ul className="flex space-x-8">
-        <li>
-          <Link href = "/menuBoard" className="navbarLinks">Menu</Link>
-        </li>
-
-      </ul>
     </nav>
   );
 };
