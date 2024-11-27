@@ -85,13 +85,13 @@ export default function Home() {
                 await addNormalItem("item", itemName);
             } else {
                 if (itemName == 'A La Carte') {
-                    router.push(`/customerOrder/aLaCarte`);
+                    router.push(`/employeeOrder/aLaCarte`);
                 } else if (itemName == 'Bowl') {
-                    router.push(`/customerOrder/bowl`);
+                    router.push(`/employeeOrder/bowl`);
                 } else if (itemName == 'Plate') {
-                    router.push(`/customerOrder/plate`);
+                    router.push(`/employeeOrder/plate`);
                 } else if (itemName == 'Bigger Plate') {
-                    router.push(`/customerOrder/biggerPlate`);
+                    router.push(`/employeeOrder/biggerPlate`);
                 }
             }
         } catch (error) {
@@ -125,7 +125,7 @@ export default function Home() {
             <main className="flex-grow flex flex-col p-4">
                 <div className="flex justify-between mt-4 mr-4">
                     <h1 className="px-4 text-2xl font-bold">Sizes</h1>
-                    <Link href="/customerOrder/completeOrder">
+                    <Link href="/employeeOrder/completeOrder">
                         <button className="px-6 py-3 text-white font-semibold rounded-lg">
                             Finalize Order
                         </button>
