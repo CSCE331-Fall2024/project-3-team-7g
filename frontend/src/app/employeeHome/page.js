@@ -31,7 +31,7 @@ export default function Home() {
                     className="rounded-lg mb-10"
                 />
                 <div className="flex space-evenly gap-4">
-                    <Link href="">
+                    <Link href="/employeeOrder">
                         <button className="px-6 py-3 text-white font-semibold rounded-lg">
                             Take Order
                         </button>
