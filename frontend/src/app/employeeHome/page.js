@@ -18,7 +18,7 @@ export default function Home() {
     };
 
     return (
-        <div className="relative flex flex-col min-h-screen bg-[#4B4B4B]">
+        <div className="relative flex flex-col min-h-screen bg-[#ce123c]">
             <main className="relative z-10 flex-grow flex flex-col items-center justify-center p-4 text-center">
                 <h1 className="text-4xl font-bold text-white mb-8">
                     Welcome to Panda Express' Employee Dashboard!
@@ -32,20 +32,20 @@ export default function Home() {
                 />
                 <div className="flex space-evenly gap-4">
                     <Link href="/employeeOrder">
-                        <button className="px-6 py-3 text-white font-semibold rounded-lg">
+                        <button className="px-6 py-3 text-white bg-[#4B4B4B] font-semibold rounded-lg">
                             Take Order
                         </button>
                     </Link>
                     {classification == 'Manager' && (
                         <Link href="ManagerScreen">
-                            <button className="px-6 py-3 text-white font-semibold rounded-lg">
+                            <button className="px-6 py-3 text-white bg-[#4B4B4B] font-semibold rounded-lg">
                                 Manager View
                             </button>
                         </Link>
                     )}
                 </div>
 
-                <button className="px-6 py-3 text-white font-semibold rounded-lg mt-4" onClick={handleLogout}>
+                <button className="px-6 py-3 text-white bg-[#4B4B4B] font-semibold rounded-lg mt-4" onClick={handleLogout}>
                     Log Out
                 </button>
             </main>
