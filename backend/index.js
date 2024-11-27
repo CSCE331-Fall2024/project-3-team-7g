@@ -6,6 +6,7 @@ const getItemsByType = require('./routes/getItemsByType')
 const manager = require('./routes/Manager')
 const purchasing = require('./routes/purchasing')
 const user = require('./routes/user')
+const language = require('./routes/language')
 const app = express();
 app.use(cors())
 const port = 3000;
@@ -14,6 +15,7 @@ app.use('/getItemsByType', getItemsByType);
 app.use('/Manager', manager)
 app.use('/purchasing', purchasing)
 app.use('/user', user)
+app.use('/language', language)
 
 // Add process hook to shutdown pool
 process.on('SIGINT', function() {
