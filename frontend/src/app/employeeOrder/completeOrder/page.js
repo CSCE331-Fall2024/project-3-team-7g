@@ -78,7 +78,7 @@ const CompleteOrder = () => {
         <div className="relative flex flex-col min-h-screen bg-white">
             <Navbar screen={"Current Order"} />
             <main className="flex-grow flex flex-col px-8 py-4">
-                <h1 className="text-2xl font-bold mb-4">Customer's Order</h1>
+                <h1 className="text-2xl font-bold mb-4">Customer&apos;s Order</h1>
 
                 {orderDetails ? (
                     <div className="space-y-4">
