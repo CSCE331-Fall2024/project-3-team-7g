@@ -137,14 +137,14 @@ export default function Home() {
                 <h1 className="px-4 text-2xl font-bold">Drinks</h1>
                 <ButtonList listType="Drink" handleItemClick={handleItemClick} isAccessible={isAccessible}></ButtonList>
 
-                {/* <button
+                {<button
                     onClick={toggleStyle}
                     className="fixed bottom-4 right-4 px-4 py-2 bg-blue-500 text-white rounded-lg shadow-lg font-bold"
 
                 >
                     Visual Aid
 
-                </button> */}
+                </button> }
             </main>
             {isPopupVisible && (
                 <div
