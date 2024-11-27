@@ -10,10 +10,7 @@ const Navbar = () => {
       </ul>
       <ul className="flex space-x-8">
         <li>
-          <Link href="../employeeOrder" className="navbarLinks">Order</Link>
-        </li>
-        <li>
-          <Link href="/ManagerScreen/personnel" className="navbarLinks">Personnel</Link>
+          <Link href="/ManagerScreen" className="navbarLinks">Personnel</Link>
         </li>
         <li>
           <Link href="/ManagerScreen/menu" className="navbarLinks">Menu</Link>
