@@ -113,7 +113,7 @@ const CompleteOrder = () => {
                 )}
 
                 <div className="flex justify-center mt-4">
-                    <Link href="/customerOrder">
+                    <Link href="/employeeOrder">
                         <button className="px-6 py-3 text-white font-semibold rounded-lg mr-2">
                             Order More
                         </button>

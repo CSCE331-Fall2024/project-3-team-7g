@@ -74,7 +74,7 @@ const Plate = () => {
                 await addNormalItem("item", entree);
             }
 
-            router.push(`/customerOrder/completeOrder`);
+            router.push(`/employeeOrder/completeOrder`);
         } catch (error) {
             showPopup("An error occurred while finalizing your items.");
         }
