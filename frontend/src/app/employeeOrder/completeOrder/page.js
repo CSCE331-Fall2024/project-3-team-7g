@@ -66,9 +66,7 @@ const CompleteOrder = () => {
                 throw new Error(`Server responded with status ${response.status}`);
             }
 
-            localStorage.removeItem("userEmail");
-            localStorage.removeItem("userName");
-            router.push("../");
+            router.push("/employeeHome");
             
             const responseData = await response.json();
         } catch (error) {
