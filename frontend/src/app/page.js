@@ -41,14 +41,9 @@ export default function Home() {
 
         localStorage.setItem("userName", userObject.name);
         localStorage.setItem("userEmail", userObject.email);
-
+        
         setIsLoading(true);
-
         handleLogin (userObject.email, userObject.name);
-
-        setTimeout(() => {
-            router.push("/customerOrder");
-        }, 500);
     }
 
     const handleLogin = async (userEmail, userName) => {
@@ -69,6 +64,18 @@ export default function Home() {
             }
 
             const responseData = await response.json();
+            
+            if (responseData.classification == "Customer") {
+                setTimeout(() => {
+                    router.push("/customerOrder");
+                }, 500);
+            } else {
+                localStorage.setItem("Classification", responseData.classification);
+                setTimeout(() => {
+                    router.push("/employeeHome");
+                }, 500);
+            }
+            
         } catch (error) {
             console.log("Error logging in")
         }
