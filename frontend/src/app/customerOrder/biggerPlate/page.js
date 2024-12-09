@@ -136,12 +136,14 @@ const BiggerPlate = () => {
                     listType="sides"
                     selectedItems={selectedItems.sides}
                     handleItemClick={handleItemClick}
+                    isAccessible={isAccessible}
                 />
                 <h1 className="px-4 text-2xl font-bold">Entrees</h1>
                 <ButtonList
                     listType="entrees"
                     selectedItems={selectedItems.entrees}
                     handleItemClick={handleItemClick}
+                    isAccessible={isAccessible}
                 />
                 {<button
                     onClick={toggleStyle}
