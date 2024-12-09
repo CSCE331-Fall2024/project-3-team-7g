@@ -12,7 +12,7 @@ export default function PriceManagement() {
     useEffect(() => {
       async function fetchMenuPrices() {
         try {
-          const response = await fetch("http://localhost:3000/Manager/getMenuPrices/");
+          const response = await fetch(process.env.NEXT_PUBLIC_BACKEND_PORT + "/Manager/getMenuPrices/");
           if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
           }
@@ -41,7 +41,7 @@ export default function PriceManagement() {
             return;
           }
       
-          const response = await fetch("http://localhost:3000/Manager/updateMenuPricing/", {
+          const response = await fetch(process.env.NEXT_PUBLIC_BACKEND_PORT + "/Manager/updateMenuPricing/", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

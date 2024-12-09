@@ -12,7 +12,7 @@ export default function InventoryManagement() {
     useEffect(() => {
         async function fetchItemInventory() {
           try {
-            const response = await fetch("http://localhost:3000/Manager/getItemInventory/");
+            const response = await fetch(process.env.NEXT_PUBLIC_BACKEND_PORT + "/Manager/getItemInventory/");
             if (!response.ok) {
               throw new Error(`HTTP error! Status: ${response.status}`);
             }
@@ -45,7 +45,7 @@ export default function InventoryManagement() {
             return;
           }
       
-          const response = await fetch("http://localhost:3000/Manager/addQuantity/", {
+          const response = await fetch(process.env.NEXT_PUBLIC_BACKEND_PORT + "/Manager/addQuantity/", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

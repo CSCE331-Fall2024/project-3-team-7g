@@ -24,7 +24,7 @@ export default function ProductUsage() {
 
   const fetchUsageData = async () => {
     try {
-      const response = await fetch('http://localhost:3000/Manager/getUsageData/', {
+      const response = await fetch(process.env.NEXT_PUBLIC_BACKEND_PORT + '/Manager/getUsageData/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
