@@ -1,7 +1,7 @@
 "use client";
 
 import Navbar from "../components/Navbar";
-import ButtonList from "@/app/components/ButtonList";
+import SimpleButtonList from "../components/SimpleButtonList";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -120,7 +120,7 @@ const ALaCarte = () => {
                         Finalize
                     </button>
                 </div>
-                <ButtonList
+                <SimpleButtonList
                     listType="entrees"
                     selectedItems={selectedItems.entrees}
                     handleItemClick={handleItemClick}

@@ -1,7 +1,7 @@
 "use client";
 
 import Navbar from "../components/Navbar";
-import ButtonList from "@/app/components/ButtonList";
+import SimpleButtonList from "../components/SimpleButtonList";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -128,13 +128,13 @@ const Bowl = () => {
                         Finalize
                     </button>
                 </div>
-                <ButtonList
+                <SimpleButtonList
                     listType="sides"
                     selectedItems={selectedItems.sides}
                     handleItemClick={handleItemClick}
                 />
                 <h1 className="px-4 text-2xl font-bold">Entrees</h1>
-                <ButtonList
+                <SimpleButtonList
                     listType="entrees"
                     selectedItems={selectedItems.entrees}
                     handleItemClick={handleItemClick}

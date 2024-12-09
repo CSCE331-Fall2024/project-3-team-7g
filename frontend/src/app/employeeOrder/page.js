@@ -1,7 +1,7 @@
 "use client";
 
 import Navbar from "./components/Navbar";
-import ButtonList from "../components/ButtonList";
+import SimpleButtonList from "./components/SimpleButtonList";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -131,20 +131,20 @@ export default function Home() {
                         </button>
                     </Link>
                 </div>
-                <ButtonList listType="sizes" handleItemClick={handleItemClick} isAccessible={isAccessible}></ButtonList>
+                <SimpleButtonList listType="sizes" handleItemClick={handleItemClick} isAccessible={isAccessible}></SimpleButtonList>
                 <h1 className="px-4 text-2xl font-bold">Appetizers</h1>
-                <ButtonList listType="Appetizer" handleItemClick={handleItemClick} isAccessible={isAccessible}></ButtonList>
+                <SimpleButtonList listType="Appetizer" handleItemClick={handleItemClick} isAccessible={isAccessible}></SimpleButtonList>
                 <h1 className="px-4 text-2xl font-bold">Drinks</h1>
-                <ButtonList listType="Drink" handleItemClick={handleItemClick} isAccessible={isAccessible}></ButtonList>
+                <SimpleButtonList listType="Drink" handleItemClick={handleItemClick} isAccessible={isAccessible}></SimpleButtonList>
 
-                {/* <button
+                <button
                     onClick={toggleStyle}
                     className="fixed bottom-4 right-4 px-4 py-2 bg-blue-500 text-white rounded-lg shadow-lg font-bold"
 
                 >
                     Visual Aid
 
-                </button> */}
+                </button>
             </main>
             {isPopupVisible && (
                 <div
