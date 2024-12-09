@@ -13,7 +13,7 @@ export default function MenuManagement() {
   useEffect(() => {
     async function fetchMenuItems() {
       try {
-        const response = await fetch("http://localhost:3000/Manager/getMenuItems/");
+        const response = await fetch(process.env.NEXT_PUBLIC_BACKEND_PORT + "/Manager/getMenuItems/");
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -44,7 +44,7 @@ export default function MenuManagement() {
         return;
       }
 
-      const response = await fetch("http://localhost:3000/Manager/addMenuItem/", {
+      const response = await fetch(process.env.NEXT_PUBLIC_BACKEND_PORT + "/Manager/addMenuItem/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -11,7 +11,7 @@ export default function UserManagement() {
   useEffect(() => {
     async function fetchUsers() {
       try {
-        const response = await fetch("http://localhost:3000/Manager/getUsers/");
+        const response = await fetch(process.env.NEXT_PUBLIC_BACKEND_PORT + "/Manager/getUsers/");
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -41,7 +41,7 @@ export default function UserManagement() {
         return;
       }
 
-      const response = await fetch("http://localhost:3000/Manager/changeClassification/", {
+      const response = await fetch(process.env.NEXT_PUBLIC_BACKEND_PORT + "/Manager/changeClassification/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

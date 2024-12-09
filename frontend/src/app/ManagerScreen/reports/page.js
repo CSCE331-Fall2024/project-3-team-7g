@@ -15,7 +15,7 @@ export default function WeeklySales() {
 
     const fetchWeeklySales = async () => {
         try {
-            const response = await fetch('http://localhost:3000/Manager/getWeeklySales/', {
+            const response = await fetch(process.env.NEXT_PUBLIC_BACKEND_PORT + '/Manager/getWeeklySales/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
