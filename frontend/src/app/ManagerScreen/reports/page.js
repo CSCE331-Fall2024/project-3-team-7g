@@ -95,9 +95,10 @@ export default function WeeklySales() {
                             <tbody>
                                 {salesData.map((item, index) => (
                                     <tr key={index}>
+                                        
                                         <td className="border border-gray-300 px-4 py-2">{item.customerId}</td>
                                         <td className="border border-gray-300 px-4 py-2">{item.orderId}</td>
-                                        <td className="border border-gray-300 px-4 py-2">{new Date(item.time).toLocaleString()}</td>
+                                        <td className="border border-gray-300 px-4 py-2">{new Date(item.time).toString().substring(0, new Date(item.time).toString().indexOf("GMT"))}</td>
                                         <td className="border border-gray-300 px-4 py-2">${item.totalCost.toFixed(2)}</td>
                                     </tr>
                                 ))}
