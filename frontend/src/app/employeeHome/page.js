@@ -58,6 +58,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Home() {
     const router = useRouter();
@@ -83,13 +84,17 @@ export default function Home() {
                     Welcome to Panda Express&apos; Employee Dashboard!
                 </h1>
                 <div className="flex space-evenly gap-4">
+                    <Link href="../employeeOrder">
                     <button className="px-6 py-3 text-white bg-[#4B4B4B] font-semibold rounded-lg">
                         Take Order
                     </button>
+                    </Link>
                     {classification === 'Manager' && (
+                        <Link href="../ManagerScreen">
                         <button className="px-6 py-3 text-white bg-[#4B4B4B] font-semibold rounded-lg">
                             Manager View
                         </button>
+                        </Link>
                     )}
                 </div>
 
