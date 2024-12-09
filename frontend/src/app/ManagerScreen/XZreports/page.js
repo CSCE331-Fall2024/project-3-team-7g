@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 
+
 export default function Reports() {
   const [xReport, setXReport] = useState([]);  
   const [zReportTotal, setZReportTotal] = useState(null); 
@@ -24,7 +25,7 @@ export default function Reports() {
       const date = `${year}/${month.padStart(2, "0")}/${day.padStart(2, "0")}`;
 
       
-      const xResponse = await fetch(`http://localhost:3000/Manager/getHourlySales/${date}`);
+      const xResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_PORT}/Manager/getHourlySales/${date}`);
       if (!xResponse.ok) {
         throw new Error(`X Report fetch error! Status: ${xResponse.status}`);
       }
