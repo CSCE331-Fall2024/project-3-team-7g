@@ -10,7 +10,7 @@ function getCurrentDateTime() {
     const year = now.getFullYear();
     const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are zero-based
     const day = String(now.getDate()).padStart(2, '0');
-    const hours = String(now.getHours()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0') - 7;
     const minutes = String(now.getMinutes()).padStart(2, '0');
     const seconds = String(now.getSeconds()).padStart(2, '0');
   
@@ -34,7 +34,7 @@ router.post('/finalizePurchase', async (req, res) => {
 
         // const { orderId, customerId, cashOrCard, isActuallyOrdering } = req.body;
         // Put back once we implement this
-        const {userEmail, cashOrCard, isActuallyOrdering} = req.body;
+        const {userEmail, cashOrCard, isActuallyOrdering, timeOfPurchase} = req.body;
         const getCustomerId = await db.query("SELECT * FROM users WHERE email = '" + userEmail + "';");
         if (getCustomerId.rowCount == 0) {
             res.status(500).json({message: "User does not exist in database"});
@@ -68,7 +68,7 @@ router.post('/finalizePurchase', async (req, res) => {
             }
         else {
             
-
+            
             if (isActuallyOrdering == true) {
                 // We need to send to customer_purchase_log, and update inventory
                 for (let i = 0; i < active_items.rowCount; i++) {
@@ -77,8 +77,9 @@ router.post('/finalizePurchase', async (req, res) => {
                     const getIngredientsOfItemQuery = "SELECT * FROM menu_to_ingredients where menu_id = " + active_items.rows[i].item + ";";
                     const active_ingredients = await db.query(getIngredientsOfItemQuery);
                     
-                    await db.query("INSERT INTO menu_sales values (" + active_items.rows[i].item + ", 1, '" + getCurrentDateTime() + "');");
-
+                    const menu_sales_query = "INSERT INTO menu_sales values (" + active_items.rows[i].item + ", 1, '" + timeOfPurchase + "');";
+                    console.log(menu_sales_query)
+                    await db.query(menu_sales_query)                    
                     for (let j = 0; j < active_ingredients.rowCount; j++) {
                         const updateInventoryComm = "UPDATE inventory SET AMOUNT = AMOUNT - 1 WHERE id = " +active_ingredients.rows[j].ingredient_id + ";";
                         await db.query(updateInventoryComm);
@@ -90,7 +91,7 @@ router.post('/finalizePurchase', async (req, res) => {
                     total += resp.rows[0].price;
                 }
                 // TODO: Add to customer_purchase_log
-                const currentTime = getCurrentDateTime();
+                const currentTime = timeOfPurchase;
                 console.log("INSERT INTO customer_purchase_log VALUES (" + orderId + ", " + customerId + ", " + total + ", '" + currentTime + "', '"  + cashOrCard + "');");
                 await db.query("INSERT INTO customer_purchase_log VALUES (" + orderId + ", " + customerId + ", " + total + ", '" + currentTime + "', '"  + cashOrCard + "');");
                 await db.query("DELETE FROM active_orders where user_id =" + customerId);
