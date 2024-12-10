@@ -43,6 +43,14 @@ router.post('/finalizePurchase', async (req, res) => {
         const getFromTableQuery = (table, item) => "SELECT " + item + " FROM " + table + " WHERE order_id = " + orderId + ';';
         const deleteFromTable = table => "DELETE FROM " + table + " WHERE order_id = " + orderId + ';';
 
+
+        if (isActuallyOrdering == false) {
+            await db.query(deleteFromTable("active_items"));
+            await db.query(deleteFromTable("active_high_level_items"));
+            res.status(200).json({message: "Successfully cleared purchase."});
+            return;
+        }
+
         const active_items = await db.query(getFromTableQuery("active_items", "item"));
         //const active_amounts = await db.query(getFromTableQuery("active_amounts", "amounts"));
         const active_high_level_items = await db.query(getFromTableQuery("active_high_level_items", "high_item"));

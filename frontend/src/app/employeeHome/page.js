@@ -127,6 +127,7 @@ export default function Home() {
                     <option value="es">Spanish</option>
                     <option value="fr">French</option>
                     <option value="zh">Chinese</option>
+                    <option value="de">German</option>
                 </select>
                 <div className="flex space-evenly gap-4">
                     <Link href="../employeeOrder">

@@ -109,7 +109,7 @@ export default function Home() {
     useEffect(() => {
         async function doTheThings() {
           const contentElement = document.getElementById("content");
-          const textElements = contentElement.querySelectorAll('h1, h2, h3, label, button, td, th, .navbarLinks');
+          const textElements = contentElement.querySelectorAll('h1, h2, h3, label, td, th, .navbarLinks');
       
           // Collect text content to translate
           const textsToTranslate = Array.from(textElements).map((el) => el.innerText);
@@ -141,32 +141,59 @@ export default function Home() {
         setIsPopupVisible(false);
     };
 
+    const handleLanguageChange = async (e) => {
+        const selectedLanguage = e.target.value;
+        const response = await fetch(process.env.NEXT_PUBLIC_BACKEND_PORT + '/language/changeLanguage', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userEmail: localStorage.getItem("userEmail"),
+                language: selectedLanguage
+            }),
+        });
+
+
+      }
+
     return (
         <div className="relative flex flex-col min-h-screen bg-white" id = "content">
             <Navbar screen={'Begin Order'} />
             <main className="flex-grow flex flex-col p-4">
                 <div className="flex justify-between mt-4 mr-4">
                     <h1 className="px-4 text-2xl font-bold">Sizes</h1>
+                    
                     <Link href="/customerOrder/completeOrder">
                         <button className="px-6 py-3 text-white font-semibold rounded-lg">
                             Finalize Order
                         </button>
                     </Link>
+                    
                 </div>
                 <ButtonList listType="sizes" handleItemClick={handleItemClick} isAccessible={isAccessible}></ButtonList>
                 <h1 className="px-4 text-2xl font-bold">Appetizers</h1>
                 <ButtonList listType="Appetizer" handleItemClick={handleItemClick} isAccessible={isAccessible}></ButtonList>
                 <h1 className="px-4 text-2xl font-bold">Drinks</h1>
                 <ButtonList listType="Drink" handleItemClick={handleItemClick} isAccessible={isAccessible}></ButtonList>
-
+                
                 {<button
                     onClick={toggleStyle}
                     className="fixed bottom-4 right-4 px-4 py-2 bg-blue-500 text-white rounded-lg shadow-lg font-bold"
-
                 >
                     Visual Aid
 
                 </button> }
+                <select
+                        onChange={handleLanguageChange}
+                        className="fixed bottom-4 right-36 appearance-none px-6 py-2 text-white font-semibold rounded-lgd bg-blue-500"
+                    >
+                    <option value="en">English</option>
+                    <option value="es">Spanish</option>
+                    <option value="fr">French</option>
+                    <option value="zh">Chinese</option>
+                    <option value="de">German</option>
+                </select>
             </main>
             {isPopupVisible && (
                 <div

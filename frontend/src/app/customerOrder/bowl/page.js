@@ -23,7 +23,7 @@ const Bowl = () => {
     useEffect(() => {
         async function doTheThings() {
           const contentElement = document.getElementById("content");
-          const textElements = contentElement.querySelectorAll('h1, h2, h3, label, button, td, th, .navbarLinks');
+          const textElements = contentElement.querySelectorAll('h1, h2, h3, label, td, th, .navbarLinks');
       
           // Collect text content to translate
           const textsToTranslate = Array.from(textElements).map((el) => el.innerText);

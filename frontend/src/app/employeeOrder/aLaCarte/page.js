@@ -2,8 +2,9 @@
 
 import Navbar from "../components/Navbar";
 import SimpleButtonList from "../components/SimpleButtonList";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import changeText from "@/app/language";
 
 const ALaCarte = () => {
     const [isAccessible, setIsAccessible] = useState(false);
@@ -17,6 +18,27 @@ const ALaCarte = () => {
     const router = useRouter();
     const [popupMessage, setPopupMessage] = useState("");
     const [isPopupVisible, setIsPopupVisible] = useState(false);
+
+    useEffect(() => {
+        async function doTheThings() {
+          const contentElement = document.getElementById("content");
+          const textElements = contentElement.querySelectorAll('h1, h2, h3, label, button, td, th, .navbarLinks');
+      
+          // Collect text content to translate
+          const textsToTranslate = Array.from(textElements).map((el) => el.innerText);
+          console.log(textsToTranslate);
+          const translatedTexts = await changeText(localStorage.getItem("userEmail"), textsToTranslate);
+          
+          //console.log(translatedTexts);
+          // Apply translated text back to each element
+          let index = 0;
+          textElements.forEach((el) => {
+            el.innerText = translatedTexts[index++];
+          });
+        }
+        doTheThings();
+        
+      }, []);
 
     const handleItemClick = (listType, item) => {
         const maxSelections = {
@@ -115,7 +137,7 @@ const ALaCarte = () => {
     };
 
     return (
-        <div className="relative flex flex-col min-h-screen bg-white">
+        <div className="relative flex flex-col min-h-screen bg-white" id = "content">
             <Navbar screen={"Choose 1 Entree"} />
             <main className="flex-grow flex flex-col p-4">
                 <div className="flex justify-between mt-4 mr-4">
