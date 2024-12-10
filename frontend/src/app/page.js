@@ -57,7 +57,7 @@ export default function Home() {
 
     const fetchWeather = async (lat, lon) => {
         const apiKey = process.env.NEXT_PUBLIC_WEATHER_API_KEY;
-        const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${apiKey}`;
+        const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=imperial&appid=${apiKey}`;
 
         try {
             const response = await fetch(url);
@@ -167,7 +167,7 @@ export default function Home() {
                 {/* Weather display */}
                 {weather ? (
                     <div className="text-white text-lg mb-4">
-                        <p>Current Temperature: {weather.main.temp}°C</p>
+                        <p>Current Temperature: {weather.main.temp}°F</p>
                         <p>Weather: {weather.weather[0].description}</p>
                     </div>
                 ) : locationError ? (
