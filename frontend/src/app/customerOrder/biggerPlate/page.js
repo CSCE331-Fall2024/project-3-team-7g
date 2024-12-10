@@ -28,7 +28,7 @@ const BiggerPlate = () => {
           // Collect text content to translate
           const textsToTranslate = Array.from(textElements).map((el) => el.innerText);
           console.log(textsToTranslate);
-          const translatedTexts = await changeText("helmutrulrich@tamu.edu", textsToTranslate);
+          const translatedTexts = await changeText(localStorage.getItem("userEmail"), textsToTranslate);
           
           //console.log(translatedTexts);
           // Apply translated text back to each element

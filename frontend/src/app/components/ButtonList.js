@@ -51,7 +51,7 @@ const ButtonList = ({ listType, handleItemClick, selectedItems, isAccessible }) 
         try {
             const textsToTranslate = buttons.map((button) => button.OptionName);
     
-            const response = await changeText("helmutrulrich@tamu.edu", textsToTranslate);
+            const response = await changeText(localStorage.getItem("userEmail"), textsToTranslate);
     
             const translations = textsToTranslate.reduce((acc, originalText, index) => {
                 acc[originalText] = response[index];
