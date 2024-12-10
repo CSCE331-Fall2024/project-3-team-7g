@@ -4,6 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { GoogleLogin } from '@react-oauth/google';
+
 
 export default function Home() {
     const [isLoading, setIsLoading] = useState(false);
@@ -188,7 +190,6 @@ export default function Home() {
                             View Menu
                         </button>
                     </Link>
-                    <h2 className="ml-2 mr-2 px-6 py-3 text-white font-bold bg-[#ce123c] rounded-lg">OR</h2>
                     <div id="google-signin-button"></div>
                 </div>
             </main>
