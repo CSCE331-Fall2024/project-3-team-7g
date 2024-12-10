@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from "react";
 import Navbar from "./components/Navbar";
+import changeText from "@/app/language";
 
 export default function Menu() {
   const [isAccessible, setIsAccessible] = useState(false);
@@ -48,6 +49,24 @@ export default function Menu() {
   useEffect(() => {
     fetchMenuPrices();
     fetchMenuItems();
+
+    async function doTheThings() {
+      const contentElement = document.getElementById("content");
+      const textElements = contentElement.querySelectorAll('h1, h2, h3, button, tb, td, th, .navbarLinks');
+  
+      // Collect text content to translate
+      const textsToTranslate = Array.from(textElements).map((el) => el.innerText);
+      console.log(textsToTranslate);
+      const translatedTexts = await changeText("helmutrulrich@tamu.edu", textsToTranslate);
+      
+      //console.log(translatedTexts);
+      // Apply translated text back to each element
+      let index = 0;
+      textElements.forEach((el) => {
+        el.innerText = translatedTexts[index++];
+      });
+    }
+    doTheThings();
   }, []);
 
   const sections = [
@@ -59,7 +78,7 @@ export default function Menu() {
   ];
 
   return (
-    <div className="flex flex-col min-h-screen bg-white text-gray-900">
+    <div className="flex flex-col min-h-screen bg-white text-gray-900" id = "content">
       <Navbar />
       <main className="flex-grow flex flex-wrap gap-4 p-4 bg-gray-50">
         <div className="flex-1 min-w-[250px] bg-gray-100 p-4 rounded-lg">
