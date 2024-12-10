@@ -37,7 +37,7 @@ function Navbar({ screen }) {
             <h1 className="text-3xl font-bold">{screen}</h1>
             <ul className="flex space-x-8">
                 <li>
-                    <button onClick={handleCancelOrder()} className="navbarLinks">
+                    <button onClick={handleCancelOrder} className="navbarLinks">
                         Home
                     </button>
                 </li>
