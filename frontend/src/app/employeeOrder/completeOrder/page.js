@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import changeText from "@/app/language";
 
 const CompleteOrder = () => {
     const [popupMessage, setPopupMessage] = useState("");
@@ -37,6 +38,25 @@ const CompleteOrder = () => {
 
     useEffect(() => {
         getOrderDetails();
+
+            async function doTheThings() {
+              const contentElement = document.getElementById("content");
+              const textElements = contentElement.querySelectorAll('h1, h2, h3, label, button, td, th, .navbarLinks');
+          
+              // Collect text content to translate
+              const textsToTranslate = Array.from(textElements).map((el) => el.innerText);
+              console.log(textsToTranslate);
+              const translatedTexts = await changeText(localStorage.getItem("userEmail"), textsToTranslate);
+              
+              //console.log(translatedTexts);
+              // Apply translated text back to each element
+              let index = 0;
+              textElements.forEach((el) => {
+                el.innerText = translatedTexts[index++];
+              });
+            }
+            doTheThings();
+            
     }, []);
 
     const handleFinalize = () => {
@@ -88,7 +108,7 @@ const CompleteOrder = () => {
     };
 
     return (
-        <div className="relative flex flex-col min-h-screen bg-white">
+        <div className="relative flex flex-col min-h-screen bg-white" id = "content">
             <Navbar screen={"Current Order"} />
             <main className="flex-grow flex flex-col px-8 py-4">
                 <h1 className="text-2xl font-bold mb-4">Customer&apos;s Order</h1>
