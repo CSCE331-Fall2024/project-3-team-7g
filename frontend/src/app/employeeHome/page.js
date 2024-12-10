@@ -59,6 +59,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import changeText from "@/app/language";
 
 export default function Home() {
     const router = useRouter();
@@ -68,6 +69,24 @@ export default function Home() {
     useEffect(() => {
         const savedClassification = localStorage.getItem("Classification");
         setClassification(savedClassification);
+
+        async function doTheThings() {
+            const contentElement = document.getElementById("content");
+            const textElements = contentElement.querySelectorAll('h1, h2, h3, label, button, td, th, .navbarLinks');
+        
+            // Collect text content to translate
+            const textsToTranslate = Array.from(textElements).map((el) => el.innerText);
+            console.log(textsToTranslate);
+            const translatedTexts = await changeText(localStorage.getItem("userEmail"), textsToTranslate);
+            
+            //console.log(translatedTexts);
+            // Apply translated text back to each element
+            let index = 0;
+            textElements.forEach((el) => {
+              el.innerText = translatedTexts[index++];
+            });
+          }
+          doTheThings(); 
     }, []);
 
     const handleLogout = () => {
@@ -94,7 +113,7 @@ export default function Home() {
       }
 
     return (
-        <div className="relative flex flex-col min-h-screen bg-[#ce123c]">
+        <div className="relative flex flex-col min-h-screen bg-[#ce123c]" id = "content">
             <main className="relative z-10 flex-grow flex flex-col items-center justify-center p-4 text-center">
                 <h1 className="text-4xl font-bold text-white mb-8">
                     Welcome to Panda Express&apos; Employee Dashboard!
