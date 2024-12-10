@@ -25,8 +25,8 @@ function Navbar({ screen }) {
                 throw new Error(`Server responded with status ${response.status}`);
             }
 
-            // Navigate to employee home page
-            router.push("/employeeHome");
+            // Navigate to customer home page
+            router.push("/customerHome");
         } catch (error) {
             console.error("Failed to cancel the order:", error);
         }
