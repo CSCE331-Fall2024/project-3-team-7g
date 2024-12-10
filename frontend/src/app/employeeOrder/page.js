@@ -5,6 +5,7 @@ import SimpleButtonList from "./components/SimpleButtonList";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import changeText from "@/app/language";
 
 export default function Home() {
     const [isAccessible, setIsAccessible] = useState(false);
@@ -105,6 +106,27 @@ export default function Home() {
         }
     }, [selectedItem]);
 
+    useEffect(() => {
+        async function doTheThings() {
+          const contentElement = document.getElementById("content");
+          const textElements = contentElement.querySelectorAll('h1, h2, h3, label, button, td, th, .navbarLinks');
+      
+          // Collect text content to translate
+          const textsToTranslate = Array.from(textElements).map((el) => el.innerText);
+          console.log(textsToTranslate);
+          const translatedTexts = await changeText(localStorage.getItem("userEmail"), textsToTranslate);
+          
+          //console.log(translatedTexts);
+          // Apply translated text back to each element
+          let index = 0;
+          textElements.forEach((el) => {
+            el.innerText = translatedTexts[index++];
+          });
+        }
+        doTheThings();
+        
+      }, []);
+
     const showPopup = (message) => {
         setPopupMessage(message);
         setIsPopupVisible(true);
@@ -120,7 +142,7 @@ export default function Home() {
     };
 
     return (
-        <div className="relative flex flex-col min-h-screen bg-white">
+        <div className="relative flex flex-col min-h-screen bg-white" id = "content">
             <Navbar screen={'Begin Order'} />
             <main className="flex-grow flex flex-col p-4">
                 <div className="flex justify-between mt-4 mr-4">
