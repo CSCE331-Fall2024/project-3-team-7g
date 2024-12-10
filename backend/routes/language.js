@@ -11,7 +11,7 @@ const API_KEY = process.env.GOOGLE_API_KEY;
 router.post('/getTextForUser', async (req, res) => {
     try {
         const {userEmail, inputs} = req.body;
-        console.log(inputs);
+        //console.log(inputs);
         const getLanguage = await db.query("SELECT language from users where email = '" + userEmail + "';");
         if (getLanguage.rowCount == 0) {
             res.status(500).json({message: "User does not exist"});
@@ -20,7 +20,7 @@ router.post('/getTextForUser', async (req, res) => {
         const language = getLanguage.rows[0].language;
 
         if (language == 'en') { // English, dont bother to translate to save me money
-            res.status(200).json({message: inputs});
+            res.status(200).json({data: inputs});
             return;
         }
 
@@ -41,7 +41,7 @@ router.post('/getTextForUser', async (req, res) => {
           }
         const data = await response.json();
         const translatedTexts = data.data.translations.map((t) => t.translatedText);
-        console.log(translatedTexts);
+        //console.log(translatedTexts);
         res.status(200).json({data: translatedTexts});
         return;
     }

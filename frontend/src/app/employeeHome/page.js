@@ -77,12 +77,38 @@ export default function Home() {
         router.push("/");
     };
 
+    const handleLanguageChange = async (e) => {
+        const selectedLanguage = e.target.value;
+        const response = await fetch(process.env.NEXT_PUBLIC_BACKEND_PORT + '/language/changeLanguage', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userEmail: localStorage.getItem("userEmail"),
+                language: selectedLanguage
+            }),
+        });
+
+
+      }
+
     return (
         <div className="relative flex flex-col min-h-screen bg-[#ce123c]">
             <main className="relative z-10 flex-grow flex flex-col items-center justify-center p-4 text-center">
                 <h1 className="text-4xl font-bold text-white mb-8">
                     Welcome to Panda Express&apos; Employee Dashboard!
                 </h1>
+                <select
+                    onChange={handleLanguageChange}
+                    className="hover:border-gray-400 focus:ring-2 pl-2 appearance-none mb-3 text-white bg-[#4B4B4B] border-gray-300 text-lg rounded"
+                    
+                >
+                    <option value="en">English</option>
+                    <option value="es">Spanish</option>
+                    <option value="fr">French</option>
+                    <option value="zh">Chinese</option>
+                </select>
                 <div className="flex space-evenly gap-4">
                     <Link href="../employeeOrder">
                     <button className="px-6 py-3 text-white bg-[#4B4B4B] font-semibold rounded-lg">
