@@ -33,8 +33,8 @@ function Navbar({ screen }) {
                 body: JSON.stringify({
                     userEmail: localStorage.getItem("userEmail"),
                     isActuallyOrdering: false, // Cancel the order
-                    cashOrCard: null, // Since the order is canceled, this can be null
-                    timeOfPurchase: null // No purchase time needed for a canceled order
+                    cashOrCard: Card, // Since the order is canceled, this can be null
+                    timeOfPurchase: getCurrentDateTime() // No purchase time needed for a canceled order
                 }),
             });
 
