@@ -101,7 +101,7 @@ const CompleteOrder = () => {
 
             localStorage.removeItem("userEmail");
             localStorage.removeItem("userName");
-            router.push("../");
+            router.push("/customerHome");
             
             const responseData = await response.json();
         } catch (error) {

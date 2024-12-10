@@ -30,20 +30,13 @@ function Navbar({ screen }) {
             console.error("Failed to cancel the order:", error);
         }
     };
-    
-    const handleLogout = () => {
-        localStorage.removeItem("userEmail");
-        localStorage.removeItem("userName");
-        localStorage.removeItem("Classification");
-        router.push("/");
-    };
 
     return (
         <nav className="bg-[var(--navbar-bg)] text-[var(--navbar-text)] h-16 flex items-center justify-between px-8">
             <h1 className="text-3xl font-bold">{screen}</h1>
             <ul className="flex space-x-8">
                 <li>
-                    <button onClick={() => { handleCancelOrder(); handleLogout(); }} className="navbarLinks">
+                    <button onClick={handleCancelOrder()} className="navbarLinks">
                         Home
                     </button>
                 </li>

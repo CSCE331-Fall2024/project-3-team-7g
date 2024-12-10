@@ -109,7 +109,7 @@ export default function Home() {
             
             if (responseData.classification === "Customer") {
                 setTimeout(() => {
-                    router.push("/customerOrder");
+                    router.push("/customerHome");
                 }, 500);
             } else {
                 localStorage.setItem("Classification", responseData.classification);
