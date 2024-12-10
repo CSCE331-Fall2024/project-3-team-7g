@@ -6,6 +6,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 const ALaCarte = () => {
+    const [isAccessible, setIsAccessible] = useState(false);
+    const toggleStyle = () => {
+        setIsAccessible((prev) => !prev);
+      };
     const [selectedItems, setSelectedItems] = useState({
         entrees: [],
     });
@@ -124,7 +128,17 @@ const ALaCarte = () => {
                     listType="entrees"
                     selectedItems={selectedItems.entrees}
                     handleItemClick={handleItemClick}
+                    isAccessible={isAccessible}
+
                 />
+                {<button
+                    onClick={toggleStyle}
+                    className="fixed bottom-4 right-4 px-4 py-2 bg-blue-500 text-white rounded-lg shadow-lg font-bold"
+
+                >
+                    Visual Aid
+
+                </button> }
             </main>
 
             {isPopupVisible && (

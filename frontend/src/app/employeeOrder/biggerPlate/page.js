@@ -6,6 +6,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 const BiggerPlate = () => {
+    const [isAccessible, setIsAccessible] = useState(false);
+    const toggleStyle = () => {
+        setIsAccessible((prev) => !prev);
+      };
     const [selectedItems, setSelectedItems] = useState({
         sides: [],
         entrees: [],
@@ -132,13 +136,23 @@ const BiggerPlate = () => {
                     listType="sides"
                     selectedItems={selectedItems.sides}
                     handleItemClick={handleItemClick}
+                    isAccessible={isAccessible}
                 />
                 <h1 className="px-4 text-2xl font-bold">Entrees</h1>
                 <SimpleButtonList
                     listType="entrees"
                     selectedItems={selectedItems.entrees}
                     handleItemClick={handleItemClick}
+                    isAccessible={isAccessible}
                 />
+                {<button
+                    onClick={toggleStyle}
+                    className="fixed bottom-4 right-4 px-4 py-2 bg-blue-500 text-white rounded-lg shadow-lg font-bold"
+
+                >
+                    Visual Aid
+
+                </button> }
             </main>
 
             {isPopupVisible && (
