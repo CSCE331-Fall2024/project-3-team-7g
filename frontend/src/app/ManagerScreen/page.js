@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Header from "./components/Navbar";
+import changeText from "@/app/language";
 
 export default function UserManagement() {
   const [Users, setUsers] = useState([]);
@@ -25,6 +26,24 @@ export default function UserManagement() {
       }
     }
     fetchUsers();
+
+    async function doTheThings() {
+      const contentElement = document.getElementById("content");
+      const textElements = contentElement.querySelectorAll('h1, h2, h3, button, tb, td, th, .navbarLinks');
+  
+      // Collect text content to translate
+      const textsToTranslate = Array.from(textElements).map((el) => el.innerText);
+      console.log(textsToTranslate);
+      const translatedTexts = await changeText(localStorage.getItem("userEmail"), textsToTranslate);
+      
+      //console.log(translatedTexts);
+      // Apply translated text back to each element
+      let index = 0;
+      textElements.forEach((el) => {
+        el.innerText = translatedTexts[index++];
+      });
+    }
+    doTheThings();
   }, []);
 
   const handleInputChange = (e) => {
@@ -74,7 +93,7 @@ export default function UserManagement() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-white text-gray-900">
+    <div className="flex flex-col min-h-screen bg-white text-gray-900" id = "content">
       <Header />
       <div className="p-6">
         <h1 className="text-2xl font-bold text-center mb-4">User Management</h1>

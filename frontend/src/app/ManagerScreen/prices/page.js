@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from "react";
 import Header from "../components/Navbar";
+import changeText from "@/app/language";
 
 export default function PriceManagement() {
     const [menuItems, setMenuPrices] = useState([]);
@@ -24,6 +25,24 @@ export default function PriceManagement() {
         }
       }
       fetchMenuPrices();
+
+      async function doTheThings() {
+        const contentElement = document.getElementById("content");
+        const textElements = contentElement.querySelectorAll('h1, h2, h3, button, td, th, .navbarLinks');
+    
+        // Collect text content to translate
+        const textsToTranslate = Array.from(textElements).map((el) => el.innerText);
+        console.log(textsToTranslate);
+        const translatedTexts = await changeText(localStorage.getItem("userEmail"), textsToTranslate);
+        
+        //console.log(translatedTexts);
+        // Apply translated text back to each element
+        let index = 0;
+        textElements.forEach((el) => {
+          el.innerText = translatedTexts[index++];
+        });
+      }
+      doTheThings();
     }, []);
   
     const handleInputChange = (e) => {
@@ -77,7 +96,7 @@ export default function PriceManagement() {
       };
 
     return (
-        <div className="flex flex-col min-h-screen bg-white text-gray-900">
+        <div className="flex flex-col min-h-screen bg-white text-gray-900" id = "content">
           <Header />
       
           <div className="p-6">

@@ -12,13 +12,15 @@ export default function Home() {
     const [locationError, setLocationError] = useState(null);
     const router = useRouter();
 
+
     useEffect(() => {
         const script = document.createElement("script");
         script.src = "https://accounts.google.com/gsi/client";
         script.async = true;
         script.defer = true;
         document.body.appendChild(script);
-
+        
+        //setText1()
         script.onload = () => {
             setIsScriptLoaded(true);
         };

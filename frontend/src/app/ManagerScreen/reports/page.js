@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState , useEffect} from "react";
 import Header from "../components/Navbar";
+import changeText from "@/app/language";
 
 export default function WeeklySales() {
     const [salesData, setSalesData] = useState([]);
@@ -12,6 +13,27 @@ export default function WeeklySales() {
         const { name, value } = e.target;
         setForm({ ...form, [name]: value });
     };
+
+    useEffect(() => {
+        async function doTheThings() {
+          const contentElement = document.getElementById("content");
+          const textElements = contentElement.querySelectorAll('h1, h2, h3, label, button, td, th, .navbarLinks');
+      
+          // Collect text content to translate
+          const textsToTranslate = Array.from(textElements).map((el) => el.innerText);
+          console.log(textsToTranslate);
+          const translatedTexts = await changeText(localStorage.getItem("userEmail"), textsToTranslate);
+          
+          //console.log(translatedTexts);
+          // Apply translated text back to each element
+          let index = 0;
+          textElements.forEach((el) => {
+            el.innerText = translatedTexts[index++];
+          });
+        }
+        doTheThings();
+        
+      }, []);
 
     const fetchWeeklySales = async () => {
         try {
@@ -38,7 +60,7 @@ export default function WeeklySales() {
     const totalWeeklySales = salesData.reduce((sum, item) => sum + item.totalCost, 0);
 
     return (
-        <div className="flex flex-col min-h-screen bg-white text-gray-900">
+        <div className="flex flex-col min-h-screen bg-white text-gray-900" id = "content">
             <Header />
 
             <div className="p-6">
