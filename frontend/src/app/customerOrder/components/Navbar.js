@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation"; // Import from 'next/navigation' in
 import React from "react";
 
 function Navbar({ screen }) {
+    const router = useRouter();
 
     const handleCancelOrder = async () => {
         try {
