@@ -5,12 +5,13 @@ const router = express.Router();
 const db = require('../db');
 router.use(express.json());
 
-
+const GOOGLE_TRANSLATE_API = "https://translation.googleapis.com/language/translate/v2";
+const API_KEY = process.env.GOOGLE_API_KEY;
 
 router.post('/getTextForUser', async (req, res) => {
     try {
-        const {userEmail, input} = req.body;
-        
+        const {userEmail, inputs} = req.body;
+        console.log(inputs);
         const getLanguage = await db.query("SELECT language from users where email = '" + userEmail + "';");
         if (getLanguage.rowCount == 0) {
             res.status(500).json({message: "User does not exist"});
@@ -19,29 +20,29 @@ router.post('/getTextForUser', async (req, res) => {
         const language = getLanguage.rows[0].language;
 
         if (language == 'en') { // English, dont bother to translate to save me money
-            res.status(200).json({message: input});
+            res.status(200).json({message: inputs});
             return;
         }
 
-        let fetchUrl = new URL("https://translation.googleapis.com/language/translate/v2");
-        
-        const key = process.env.GOOGLE_API_KEY;
-        fetchUrl.searchParams.set("key", key);
-        fetchUrl.searchParams.set("q", input);
-        fetchUrl.searchParams.set("target", language);
-
-        //console.log(key + " language: " + language + " text: " + input);
-
-        const textFetch = await fetch(fetchUrl, {
-            method: 'GET',
+        const response = await fetch(`${GOOGLE_TRANSLATE_API}?key=${API_KEY}`, {
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
-        });
-        // console.log(textFetch);
-        const data = await textFetch.json();
-        const responseText = data.data.translations[0].translatedText;
-        res.status(200).json({message: responseText});
+            body: JSON.stringify({
+              q: inputs,
+              target: language,
+              format: "html",
+            }),
+          });
+    
+          if (!response.ok) {
+            throw new Error("Failed to fetch translations");
+          }
+        const data = await response.json();
+        const translatedTexts = data.data.translations.map((t) => t.translatedText);
+        console.log(translatedTexts);
+        res.status(200).json({data: translatedTexts});
         return;
     }
     catch (error) {

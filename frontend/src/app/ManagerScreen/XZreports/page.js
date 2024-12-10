@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
-
+import changeText from "@/app/language";
 
 export default function Reports() {
   const [xReport, setXReport] = useState([]);  
@@ -13,6 +13,26 @@ export default function Reports() {
   const [day, setDay] = useState("");
   const [year, setYear] = useState("");
 
+  useEffect(() => {
+    async function doTheThings() {
+      const contentElement = document.getElementById("content");
+      const textElements = contentElement.querySelectorAll('h1, h2, p, label, button, td, th, .navbarLinks');
+  
+      // Collect text content to translate
+      const textsToTranslate = Array.from(textElements).map((el) => el.innerText);
+      console.log(textsToTranslate);
+      const translatedTexts = await changeText("atkinsonl477@tamu.edu", textsToTranslate);
+      
+      //console.log(translatedTexts);
+      // Apply translated text back to each element
+      let index = 0;
+      textElements.forEach((el) => {
+        el.innerText = translatedTexts[index++];
+      });
+    }
+    doTheThings();
+    
+  }, []);
   
   async function fetchXReport() {
     try {
@@ -59,7 +79,7 @@ export default function Reports() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-white text-gray-900">
+    <div className="flex flex-col min-h-screen bg-white text-gray-900" id = "content">
       <Navbar />
       <main className="flex-grow flex flex-col p-4">
         <h1 className="text-3xl font-bold text-center mb-8">Reports</h1>
