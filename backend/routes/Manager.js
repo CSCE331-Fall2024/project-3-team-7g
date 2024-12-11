@@ -7,7 +7,16 @@ const db = require("../db")
 router.use(express.json());
 
 
-
+/**
+Handles HTTP POST requests to the "/link" endpoint.*
+@name post/addInventoryItem
+@function
+@memberof module:routes
+@param {express.Request} req - The HTTP request object, containing `name` and `amount` in the body.
+@param {express.Response} res - The HTTP response object.
+@param {Function} next - The next middleware function in the stack.
+@description Adds a new unique inventory item to the inventory table with a specified amount.
+*/
 router.post('/addInventoryItem', async (req, res) => {
     const { name, amount } = req.body;
 
@@ -27,6 +36,16 @@ router.post('/addInventoryItem', async (req, res) => {
 }
 );
 
+/**
+Handles HTTP POST requests to the "/link" endpoint.*
+@name post/addMenuItem
+@function
+@memberof module:routes
+@param {express.Request} req - The HTTP request object, containing itemName and itemType in the body.
+@param {express.Response} res - The HTTP response object.
+@param {Function} next - The next middleware function in the stack.
+@description Adds a new menu item with an associated type to the menu table with the latest menu ID.
+*/
 router.post('/addMenuItem', async (req, res) => {
     const { itemName, itemType } = req.body;
 
@@ -46,6 +65,16 @@ router.post('/addMenuItem', async (req, res) => {
 }
 );
 
+/**
+Handles HTTP POST requests to the "/link" endpoint.*
+@name post/addQuantity
+@function
+@memberof module:routes
+@param {express.Request} req - The HTTP request object, containing name and amount in the body.
+@param {express.Response} res - The HTTP response object.
+@param {Function} next - The next middleware function in the stack.
+@description Adds the amount to a specified inventory item to the inventory table.
+*/
 router.post('/addQuantity', async (req, res) => {
     const { name, amount } = req.body;
 
@@ -69,6 +98,16 @@ router.post('/addQuantity', async (req, res) => {
     }
 );
 
+/**
+Handles HTTP POST requests to the "/link" endpoint.*
+@name post/updateMenuPricing
+@function
+@memberof module:routes
+@param {express.Request} req - The HTTP request object, containing id and price in the body.
+@param {express.Response} res - The HTTP response object.
+@param {Function} next - The next middleware function in the stack.
+@description Changes the price of a specified menu item to a new price.
+*/
 router.post('/updateMenuPricing', async (req, res) => {
     const { id, price } = req.body;
 
@@ -97,6 +136,16 @@ router.post('/updateMenuPricing', async (req, res) => {
     }
 });
 
+/**
+Handles HTTP POST requests to the "/link" endpoint.*
+@name post/changeClassification
+@function
+@memberof module:routes
+@param {express.Request} req - The HTTP request object, containing user_id and classification in the body.
+@param {express.Response} res - The HTTP response object.
+@param {Function} next - The next middleware function in the stack.
+@description Changes the classification of a specified user.
+*/
 router.post('/changeClassification', async (req, res) => {
     const { user_id, classification } = req.body;
 
@@ -122,7 +171,16 @@ router.post('/changeClassification', async (req, res) => {
 });
 
 
-
+/**
+Handles HTTP GET requests to the "/link" endpoint.*
+@name get/getMenuItems
+@function
+@memberof module:routes
+@param {express.Request} req - The HTTP request object.
+@param {express.Response} res - The HTTP response object.
+@param {Function} next - The next middleware function in the stack.
+@description Returns all of the menu items along with their associated IDs and types from the menu table.
+*/
 router.get('/getMenuItems', async (req, res) => {
     try {
         const result = await db.query("SELECT id, name, type FROM menu");
@@ -133,6 +191,16 @@ router.get('/getMenuItems', async (req, res) => {
     }
 });
 
+/**
+Handles HTTP GET requests to the "/link" endpoint.*
+@name get/getMenuPrices
+@function
+@memberof module:routes
+@param {express.Request} req - The HTTP request object.
+@param {express.Response} res - The HTTP response object.
+@param {Function} next - The next middleware function in the stack.
+@description Returns all of the menu prices along with their associated IDs and menu names from the menu_pricing table.
+*/
 router.get('/getMenuPrices', async (req, res) => {
     try {
         const result = await db.query("SELECT id, name, price FROM menu_pricing");
@@ -143,6 +211,16 @@ router.get('/getMenuPrices', async (req, res) => {
     }
 });
 
+/**
+Handles HTTP GET requests to the "/link" endpoint.*
+@name get/getItemInventory
+@function
+@memberof module:routes
+@param {express.Request} req - The HTTP request object.
+@param {express.Response} res - The HTTP response object.
+@param {Function} next - The next middleware function in the stack.
+@description Returns all of the inventory items along with their associated IDs and amounts from the inventory table.
+*/
 router.get('/getItemInventory', async (req, res) => {
     try {
         const result = await db.query("SELECT id, name, amount FROM inventory");
@@ -153,6 +231,16 @@ router.get('/getItemInventory', async (req, res) => {
     }
 });
 
+/**
+Handles HTTP GET requests to the "/link" endpoint.*
+@name get/getUsers
+@function
+@memberof module:routes
+@param {express.Request} req - The HTTP request object.
+@param {express.Response} res - The HTTP response object.
+@param {Function} next - The next middleware function in the stack.
+@description Returns all of the users along with their associated user IDs, emails, and classifications from the users table.
+*/
 router.get('/getUsers', async (req, res) => {
     try {
         const result = await db.query("SELECT user_id, name, email, classification FROM users"); // Add the table name here
@@ -163,7 +251,16 @@ router.get('/getUsers', async (req, res) => {
     }
 });
 
-
+/**
+Handles HTTP POST requests to the "/link" endpoint.*
+@name post/getUsageData
+@function
+@memberof module:routes
+@param {express.Request} req - The HTTP request object, containing the startYear, startMonth, startDay, startHour, endYear, endMonth, endDay, and endHour.
+@param {express.Response} res - The HTTP response object.
+@param {Function} next - The next middleware function in the stack.
+@description Returns amount of inventory items used given a specified time period.
+*/
 router.post('/getUsageData', async (req, res) => {
     try {
         const { startYear, startMonth, startDay, startHour, endYear, endMonth, endDay, endHour } = req.body;
@@ -210,6 +307,16 @@ router.post('/getUsageData', async (req, res) => {
     }
 });
 
+/**
+Handles HTTP POST requests to the "/link" endpoint.*
+@name post/getWeeklySales
+@function
+@memberof module:routes
+@param {express.Request} req - The HTTP request object, containing year, month, and day in the body.
+@param {express.Response} res - The HTTP response object.
+@param {Function} next - The next middleware function in the stack.
+@description Fetches sales data for a specified week starting from the given date.
+*/
 router.post('/getWeeklySales', async (req, res) => {
     try {
         const { year, month, day } = req.body;
@@ -265,7 +372,16 @@ router.post('/getWeeklySales', async (req, res) => {
     }
 });
 
-
+/**
+Handles HTTP GET requests to the "/link" endpoint.*
+@name get/getHourlySales
+@function
+@memberof module:routes
+@param {express.Request} req - The HTTP request object, containing year, month, and day in the request body.
+@param {express.Response} res - The HTTP response object.
+@param {Function} next - The next middleware function in the stack.
+@description Fetches hourly sales data for a specified date.
+*/
 router.get('/getHourlySales/:year/:month/:day', async (req, res) => {
     const { year, month, day } = req.params;
 
