@@ -84,9 +84,9 @@
 # Scrum 2:
 # Tristan: Create employee/cashier ordering.
 # Diego: Finalize employee home screen and manager switching based on login.
-# Helmut: All manager reports, x, z reports, etc.
+# Helmut: Most manager reports and backend development.
 # Logan: Create Backend for language switching
-# Sid: Update large text visual aid.
+# Sid: Update large text visual aid, x, z reports
 
 # Scrum 3:
 # Tristan: Work on Expert Panel report. Deployment.
