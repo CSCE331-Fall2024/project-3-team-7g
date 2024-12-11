@@ -6,6 +6,11 @@ const db = require("../db");
 
 router.use(express.json());
 
+
+/**
+ * @function backend/getItemsByType/:type
+ * 
+ */
 router.get('/:type', (req, res) => {
     let items = [];
     const type = req.params.type;
