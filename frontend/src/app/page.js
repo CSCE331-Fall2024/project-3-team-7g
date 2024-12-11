@@ -183,7 +183,7 @@ export default function Home() {
                     </div>
                 )}
 
-                <div className="flex space-evenly">
+                <div className="flex space-evenly gap-4">
                     <Link href="menuBoard">
                         <button className="px-6 py-3 text-white font-semibold rounded-lg">
                             View Menu
