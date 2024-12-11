@@ -64,6 +64,7 @@ import changeText from "@/app/language";
 export default function Home() {
     const router = useRouter();
     const [classification, setClassification] = useState(null);
+    const [language, setLanguage] = useState(null);
 
     // Use useEffect to access localStorage only on the client side
     useEffect(() => {
@@ -73,20 +74,20 @@ export default function Home() {
         async function doTheThings() {
             const contentElement = document.getElementById("content");
             const textElements = contentElement.querySelectorAll('h1, h2, h3, label, button, td, th, .navbarLinks');
-        
+
             // Collect text content to translate
             const textsToTranslate = Array.from(textElements).map((el) => el.innerText);
             console.log(textsToTranslate);
             const translatedTexts = await changeText(localStorage.getItem("userEmail"), textsToTranslate);
-            
+
             //console.log(translatedTexts);
             // Apply translated text back to each element
             let index = 0;
             textElements.forEach((el) => {
-              el.innerText = translatedTexts[index++];
+                el.innerText = translatedTexts[index++];
             });
-          }
-          doTheThings(); 
+        }
+        doTheThings();
     }, []);
 
     const handleLogout = () => {
@@ -108,12 +109,14 @@ export default function Home() {
                 language: selectedLanguage
             }),
         });
+        setLanguage(selectedLanguage);
+    }
 
-
-      }
+    useEffect(() => {
+    }, [language]);
 
     return (
-        <div className="relative flex flex-col min-h-screen bg-[#ce123c]" id = "content">
+        <div className="relative flex flex-col min-h-screen bg-[#ce123c]" id="content">
             <main className="relative z-10 flex-grow flex flex-col items-center justify-center p-4 text-center">
                 <h1 className="text-4xl font-bold text-white mb-8">
                     Welcome to Panda Express&apos; Employee Dashboard!
@@ -121,7 +124,7 @@ export default function Home() {
                 <select
                     onChange={handleLanguageChange}
                     className="hover:border-gray-400 focus:ring-2 pl-2 appearance-none mb-3 text-white bg-[#4B4B4B] border-gray-300 text-lg rounded"
-                    
+
                 >
                     <option value="en">English</option>
                     <option value="es">Spanish</option>
@@ -131,15 +134,15 @@ export default function Home() {
                 </select>
                 <div className="flex space-evenly gap-4">
                     <Link href="../employeeOrder">
-                    <button className="px-6 py-3 text-white bg-[#4B4B4B] font-semibold rounded-lg">
-                        Take Order
-                    </button>
+                        <button className="px-6 py-3 text-white bg-[#4B4B4B] font-semibold rounded-lg">
+                            Take Order
+                        </button>
                     </Link>
                     {classification === 'Manager' && (
                         <Link href="../ManagerScreen">
-                        <button className="px-6 py-3 text-white bg-[#4B4B4B] font-semibold rounded-lg">
-                            Manager View
-                        </button>
+                            <button className="px-6 py-3 text-white bg-[#4B4B4B] font-semibold rounded-lg">
+                                Manager View
+                            </button>
                         </Link>
                     )}
                 </div>
