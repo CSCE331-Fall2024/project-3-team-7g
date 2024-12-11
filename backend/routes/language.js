@@ -8,6 +8,18 @@ router.use(express.json());
 const GOOGLE_TRANSLATE_API = "https://translation.googleapis.com/language/translate/v2";
 const API_KEY = process.env.GOOGLE_API_KEY;
 
+
+/**
+ * Handles getting text for users with HTTP POST request to "/routes/language/getTextForUser" endpoint.
+ * 
+ * @name post/getTextForUser
+ * @function backend/language/getTextForUser
+ * @param {express.Request} req - JSON containing information.
+ * @param {string} req.body.userEmail - The email of the user adding to their purchase.
+ * @param {string[]} req.body.inputs - Array of words to translate.
+ * @param {express.Response} res - Response from server. 200 for success, 500 for incorrect argument(s).
+ * @description Translates words with Google's Translate API. If there are errors with this function, verify that there's a valid google api key in the environment variables.
+ */
 router.post('/getTextForUser', async (req, res) => {
     try {
         const {userEmail, inputs} = req.body;
@@ -49,9 +61,19 @@ router.post('/getTextForUser', async (req, res) => {
         console.error("Error getting text for user: ", error);
         res.status(500).json({message: "An error occurred while getting text."})
     }
-    
 });
 
+/**
+ * Handles changing languages for a user with HTTP POST request to "/routes/language/changeLanguage" endpoint.
+ * 
+ * @name post/changeLanguage
+ * @function backend/language/changeLanguage
+ * @param {express.Request} req - JSON containing information
+ * @param {string} req.body.userEmail - The email of the user changing their desired language.
+ * @param {string} req.body.language - Desired language, in ISO 639-1 standard.
+ * @param {express.Response} res - Response from server. 200 for success, 500 for incorrect argument(s).
+ * @description changes the language of a given user. On Success, any consecutive pages the user goes to will be translated into their language.
+ */
 router.post('/changeLanguage', async (req, res) => {
     try {
         const {userEmail, language} = req.body;

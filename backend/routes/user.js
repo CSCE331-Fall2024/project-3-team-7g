@@ -6,7 +6,17 @@ const db = require('../db');
 router.use(express.json());
 
 
-// Functions as as a getter for information about a user or to add new users
+/**
+ * Handles logging in with HTTP POST request to "/routes/user/login" endpoint.
+ * 
+ * @name post/login
+ * @function backend/user/login
+ * @param {express.Request} req - JSON containing login information
+ * @param {string} req.body.userEmail - The email of the user trying to log in
+ * @param {string} req.body.userName - The name of the user trying to log in
+ * @param {express.Response} res - Response from server. 200 for success, 500 for incorrect argument(s).
+ * @description Logs in user with given parameters. If successful, response will contain information giving whether or not they are a new user, their user_id, and their classification (Customer for new users).
+ */
 router.post('/login', async (req, res) => {
     try {
         const {userEmail, userName} = req.body;
@@ -20,7 +30,7 @@ router.post('/login', async (req, res) => {
                 "user_id" : id,
                 "name" : userName,
                 "email" : userEmail,
-                "classification" : "Employee"
+                "classification" : "Customer"
             });
         }
         else {

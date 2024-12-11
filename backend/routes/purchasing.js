@@ -8,12 +8,16 @@ router.use(express.json());
 
 
 /**
- * finalize purchase params:
- * orderId - orderId of purchase you want to finalize
- * customerId
- * cashOrCard - Describes payment method
- * isActuallyOrdering - boolean stating whether you want to send the purchase to
- *  completed purchase tables
+ * Handles Completing purchases with HTTP POST request to "/routes/purchasing/finalizePurchase" endpoint.
+ * 
+ * @name post/finalizePurchase
+ * @function backend/purchasing/finalizePurchase
+ * @param {express.Request} req - JSON containing purchase information
+ * @param {string} req.body.userEmail - The email of the user completing purchase
+ * @param {string} req.body.cashOrCard - 'Cash' or 'Card' for payment method
+ * @param {boolean} req.body.isActuallyOrdering - determines whether the user completes ordering. finalizePurchase doubles as a cancel purchase function.
+ * @param {string} req.body.timeOfPurchase - time of request, formatted as "YYYY-MM-DD HH:MM:SS"
+ * @param {express.Response} res - Response from server. 200 for success, 500 for incorrect argument(s).
  */
 router.post('/finalizePurchase', async (req, res) => {
 
@@ -21,9 +25,6 @@ router.post('/finalizePurchase', async (req, res) => {
 
         
         let total = 0;
-
-        // const { orderId, customerId, cashOrCard, isActuallyOrdering } = req.body;
-        // Put back once we implement this
         const {userEmail, cashOrCard, isActuallyOrdering, timeOfPurchase} = req.body;
         const getCustomerId = await db.query("SELECT * FROM users WHERE email = '" + userEmail + "';");
         if (getCustomerId.rowCount == 0) {
@@ -52,7 +53,6 @@ router.post('/finalizePurchase', async (req, res) => {
         }
 
         const active_items = await db.query(getFromTableQuery("active_items", "item"));
-        //const active_amounts = await db.query(getFromTableQuery("active_amounts", "amounts"));
         const active_high_level_items = await db.query(getFromTableQuery("active_high_level_items", "high_item"));
 
 
@@ -88,7 +88,6 @@ router.post('/finalizePurchase', async (req, res) => {
                     const resp = await db.query(addToTotalQuery);
                     total += resp.rows[0].price;
                 }
-                // TODO: Add to customer_purchase_log
                 const currentTime = timeOfPurchase;
                 console.log("INSERT INTO customer_purchase_log VALUES (" + orderId + ", " + customerId + ", " + total + ", '" + currentTime + "', '"  + cashOrCard + "');");
                 await db.query("INSERT INTO customer_purchase_log VALUES (" + orderId + ", " + customerId + ", " + total + ", '" + currentTime + "', '"  + cashOrCard + "');");
@@ -96,7 +95,6 @@ router.post('/finalizePurchase', async (req, res) => {
             }
             // Clear from active purcahse
             await db.query(deleteFromTable("active_items"));
-            //await db.query(deleteFromTable("active_amounts"));
             await db.query(deleteFromTable("active_high_level_items"));
         }
 
@@ -114,11 +112,16 @@ router.post('/finalizePurchase', async (req, res) => {
 });
 
 /**
- * addToPurchase params
- * type - type of thing we want to add to database. Either highItem, item, or amount
- * orderId
- * customerId
- * item
+ * Handles adding to purchases with HTTP POST request to "/routes/purchasing/addToPurchase" endpoint.
+ * 
+ * @name post/addToPurchase
+ * @function backend/purchasing/addToPurchase
+ * @param {express.Request} req - JSON containing purchase information
+ * @param {string} req.body.userEmail - The email of the user adding to their purchase
+ * @param {int} req.body.type - Type of addition: "highItem", "item",
+ * @param {int} req.body.item - determines whether the user completes ordering. finalizePurchase doubles as a cancel purchase function.
+ * @param {express.Response} res - Response from server. 200 for success, 500 for incorrect argument(s).
+ * @description Adds an item to a users purchase, given their email. If successful, it will return the user id as well as a message stating that the add was successful. If there was a failure, it will return the reason the addition failed.
  */
 router.post('/addToPurchase', async (req, res) => {
     try {
@@ -190,7 +193,7 @@ router.post('/addToPurchase', async (req, res) => {
         await db.query("INSERT INTO " + tableToAddTo + " values (" + orderId + ", " + customerId + ", " + itemId + ", " + itemCountInOrder + ");");
         res.status(200).json({
             "orderId" : Number(orderId),
-            "status" : "successful insertion",
+            "message" : "successful insertion",
         });
     } catch (error) {
         console.error("Error adding to purchase: ", error);
@@ -200,6 +203,16 @@ router.post('/addToPurchase', async (req, res) => {
 
 });
 
+
+/**
+ * Handles getting order details with HTTP GET request to "/routes/purchasing/getOrderDetails/" endpoint.
+ * 
+ * @name get/addToPurchase
+ * @function backend/purchasing/getOrderDetails/:email
+ * @param {string} :email - user email to grab details from.
+ * @param {express.Response} res - Response from server. 200 for success, 500 for incorrect argument(s).
+ * @description On success, it will return a JSON list of items that specify the user's purchase information. View Source code to see specific differences in items (Plate vs. Bowl vs. Drink).
+ */
 router.get('/getOrderDetails/:email', async (req, res) => {
     try {
     
