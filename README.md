@@ -1,5 +1,31 @@
 # project-3-team-7g
 
+# Purpose: This repository contains a POS system for Panda Express with functionality for customer ordering, employee ordering, and manager reports.
+
+# Key Features:
+# * Fully functional customer, employee, and manager environments.
+# * Management options and data reports.
+# * Google OAuth Login: Verifies customer/employee/manager. User account required, automatically making gmail accounts a customer.
+# * Weather Services API: Tracks current location and displays related weather.
+# * Multi-language support: Includes an accessibility feature for language-switching through API integration.
+# * Visual Aid and Tremors: Includes enlarging text and buttons to help with visual aid and tremors.
+
+# Prerequisites:
+# Node.js, npm, javascript
+
+# Installation Instructions:
+# Step 1: git clone https://github.com/CSCE331-Fall2024/project-3-team-7g.git
+
+# Step 2 (in terminal 1): 
+# cd project-3-team-7g/backend
+# npm install
+# node index.js
+
+# Step 3 (in terminal 2): 
+# cd project-3-team-7g/frontend
+# npm install && npm run build
+# npm start
+
 # Sprint 1:
 
 # Scrum 1: 
